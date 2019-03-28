@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using projekt.Models;
+using projekt.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace projekt
 {
@@ -33,6 +36,13 @@ namespace projekt
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddTransient<IRecipeRepository, EFRecipeRepository>();
+            services.AddTransient<ICatRepository, EFCatRepository>();
+            services.AddTransient<IDiffLevelRepository, EFDiffLevelRepository>();
+
+            services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AppDbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +68,11 @@ namespace projekt
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
+            SeedData.PopulateWithCategories(app);
+            SeedData.PopulateWithDiffLevels(app);
+            SeedData.PopulateWithRecipes(app);
         }
     }
 }
