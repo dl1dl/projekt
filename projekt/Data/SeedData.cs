@@ -15,7 +15,7 @@ namespace projekt.Data
         {
             AppDbContext context = app.ApplicationServices.GetRequiredService<AppDbContext>();
             context.Database.Migrate();
-            context.Recipes.RemoveRange(context.Recipes);
+            //context.Recipes.RemoveRange(context.Recipes);
 
             if (!context.Recipes.Any())
             {

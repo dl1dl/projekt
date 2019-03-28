@@ -1,15 +1,31 @@
-﻿@model IEnumerable<Recipe>
+﻿@model PrintVM
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
+<h4>przepisy:</h4>
 
-@foreach (var recipe in Model)
+@foreach (var recipe in Model.Recipes)
+{
+    @Html.Partial("RecipePartialView", recipe)
+}
+
+<h4>kategorie:</h4>
+
+@foreach (var category in Model.Categories)
 {
     <div>
-        <h3>@recipe.Name</h3>
-        <h4>Kategoria: @recipe.CategoryId, poziom trudności: @recipe.DiffLevelId</h4>
-        <p>@recipe.Body</p>
+        <h3>@category.Name - @category.CategoryID</h3>
+    </div>
+}
+
+<hr />
+<h4>pozoimy trudności:</h4>
+
+@foreach (var difflevel in Model.DiffLevels)
+{
+    <div>
+        <h3>@difflevel.Name - @difflevel.DifficultyLevelID</h3>
     </div>
 }
