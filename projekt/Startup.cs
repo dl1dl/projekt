@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using projekt.Models;
 using projekt.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace projekt
 {
@@ -43,6 +44,13 @@ namespace projekt
 
             services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AppDbContext")));
+
+            services.AddIdentity<WebAppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppIdentityDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("IdentityContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +69,7 @@ namespace projekt
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
