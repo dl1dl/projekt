@@ -39,7 +39,7 @@ namespace projekt.Controllers
             {
                 WebAppUser user = new WebAppUser
                 {
-                    UserName = newuser.UserName,
+                    UserName = newuser.Email,
                     Email = newuser.Email
                 };
 
@@ -58,6 +58,32 @@ namespace projekt.Controllers
                 }
             }
             return View(newuser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            WebAppUser user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                IdentityResult result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("UsersList");
+                }
+                else
+                {
+                    foreach (IdentityError error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Brak takiego użytkownika");
+            }
+            return View("UsersList");
         }
     }
 }
