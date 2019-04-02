@@ -11,10 +11,17 @@ namespace projekt.Controllers
     public class AdministrationController : Controller
     {
         private UserManager<WebAppUser> _userManager;
+        private IUserValidator<WebAppUser> _userValidator;
+        private IPasswordValidator<WebAppUser> _passwordValidator;
+        private IPasswordHasher<WebAppUser> _passwordHasher;
 
-        public AdministrationController(UserManager<WebAppUser> umn)
+        public AdministrationController(UserManager<WebAppUser> umn, IUserValidator<WebAppUser> uvl, 
+            IPasswordValidator<WebAppUser> pvl, IPasswordHasher<WebAppUser> psh)
         {
             _userManager = umn;
+            _userValidator = uvl;
+            _passwordValidator = pvl;
+            _passwordHasher = psh;
         } 
 
         public ViewResult Index()
@@ -84,6 +91,81 @@ namespace projekt.Controllers
                 ModelState.AddModelError("", "Brak takiego użytkownika");
             }
             return View("UsersList");
+        }
+
+        public async Task<IActionResult> EditUser(string id)
+        {
+            WebAppUser user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                return View(user);
+            }
+            else
+            {
+                return RedirectToAction("UsersList");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(string id, string email, string password)
+        {
+            WebAppUser user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                user.Email = email;
+                IdentityResult validEmail = await _userValidator.ValidateAsync(_userManager, user);
+                if (!validEmail.Succeeded)
+                {
+                    foreach (IdentityError error in validEmail.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                else
+                {
+                    user.UserName = user.Email;
+                }
+
+                IdentityResult validPassword = null;
+                bool emptyPassword = string.IsNullOrEmpty(password);
+                if (!emptyPassword)
+                    {
+                    validPassword = await _passwordValidator.ValidateAsync(_userManager, user, password);
+                    if (!validPassword.Succeeded)
+                    {
+                        foreach (IdentityError error in validPassword.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+                    else
+                    {
+                        user.PasswordHash = _passwordHasher.HashPassword(user, password);
+                    }
+                }
+                if ((validEmail.Succeeded && emptyPassword) ||
+                    (validEmail.Succeeded && validPassword.Succeeded && !emptyPassword))
+                    {
+                    IdentityResult result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("UsersList");
+                    }
+                    else
+                    {
+                        foreach (IdentityError error in validPassword.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+                }
+                return View(user);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Nie znaleziono użytkownika");
+            }
+            return View(user);
         }
     }
 }

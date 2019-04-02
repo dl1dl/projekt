@@ -1,0 +1,24 @@
+﻿@model WebAppUser
+
+@{
+    ViewData["Title"] = "Edycja użytkownika";
+}
+
+<h2>Edytuj użytkownika @Model.Id</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="EditUser" method="post">
+    <div class="form-group">
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="password">Hasło:</label>
+        <input name="password" class="form-control" type="password">
+    </div>
+
+    <button class="btn btn-success">Zapisz zmiany</button>
+    <a class="btn btn-danger" asp-action="UsersList">Anuluj</a>
+</form>
+
