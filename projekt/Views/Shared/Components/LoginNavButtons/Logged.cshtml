@@ -1,0 +1,9 @@
+﻿@model WebAppUser
+
+<p class="navbar-text" style="float:left; max-width:60%; white-space:nowrap; overflow:hidden;">Witaj @Model.Email</p>
+<a asp-controller="Account" asp-action="Details" class="btn btn-primary navbar-btn" style="margin-left:5px; float:right">
+    <i class="far fa-user"></i> Twój profil
+</a>
+<a asp-controller="Account" asp-action="Logout" class="btn btn-success navbar-btn" style="float:right">
+    Wyloguj się
+</a>

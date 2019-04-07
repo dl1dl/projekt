@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using projekt.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace projekt.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private UserManager<WebAppUser> _userManager;
@@ -22,7 +25,7 @@ namespace projekt.Controllers
             _userValidator = uvl;
             _passwordValidator = pvl;
             _passwordHasher = psh;
-        } 
+        }
 
         public ViewResult Index()
         {
