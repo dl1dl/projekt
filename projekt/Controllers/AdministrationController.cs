@@ -7,6 +7,7 @@ using projekt.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using projekt.Data;
 
 namespace projekt.Controllers
 {
@@ -17,14 +18,16 @@ namespace projekt.Controllers
         private IUserValidator<WebAppUser> _userValidator;
         private IPasswordValidator<WebAppUser> _passwordValidator;
         private IPasswordHasher<WebAppUser> _passwordHasher;
+        private IRecipeRepository _recipeRepository;
 
         public AdministrationController(UserManager<WebAppUser> umn, IUserValidator<WebAppUser> uvl, 
-            IPasswordValidator<WebAppUser> pvl, IPasswordHasher<WebAppUser> psh)
+            IPasswordValidator<WebAppUser> pvl, IPasswordHasher<WebAppUser> psh, IRecipeRepository rpo)
         {
             _userManager = umn;
             _userValidator = uvl;
             _passwordValidator = pvl;
             _passwordHasher = psh;
+            _recipeRepository = rpo;
         }
 
         public ViewResult Index()
@@ -32,9 +35,14 @@ namespace projekt.Controllers
             return View();
         }
 
-        public ViewResult UsersList()
+        public ViewResult Users()
         {
             return View(_userManager.Users);
+        }
+
+        public ViewResult Recipes()
+        {
+            return View(_recipeRepository.Recipes);
         }
 
         public ViewResult CreateUser()
@@ -169,6 +177,30 @@ namespace projekt.Controllers
                 ModelState.AddModelError("", "Nie znaleziono użytkownika");
             }
             return View(user);
+        }
+
+        public ViewResult EditRecipe(int id)
+        {
+            return View(_recipeRepository.Recipes.FirstOrDefault(p => p.RecipeID == id));
+        }
+
+        [HttpPost]
+        public IActionResult EditRecipe(Recipe recipe)
+        {
+            if (ModelState.IsValid)
+            {
+                _recipeRepository.EditRecipe(recipe);
+                return RedirectToAction("Recipes");
+            }
+            return View(recipe);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteRecipe(int id)
+        {
+            Recipe recipe = _recipeRepository.Recipes.FirstOrDefault(p => p.RecipeID == id);
+            _recipeRepository.DeleteRecipe(recipe);
+            return RedirectToAction("Recipes");
         }
     }
 }

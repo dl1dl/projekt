@@ -12,5 +12,7 @@ namespace projekt.Data
         IQueryable<Recipe> Recipes { get; }
 
         void AddRecipe(Recipe recipe);
+        void EditRecipe(Recipe recipe);
+        void DeleteRecipe(Recipe recipe);
     }
 }

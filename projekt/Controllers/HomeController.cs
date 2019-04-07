@@ -47,7 +47,7 @@ namespace projekt.Controllers
             return View(recipe);
         }
 
-        /*[Authorize]
+        [Authorize]
         public ViewResult AddRecipe() 
         {
             return View(new Recipe());
@@ -62,13 +62,13 @@ namespace projekt.Controllers
                 WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
                 if (user != null)
                 {
-                    recipe.Auth = user;
+                    //recipe.Auth = user;
                     _recipeRepository.AddRecipe(recipe);
                     return RedirectToAction("Index");
                 }
             }
             return View(recipe);
-        }*/
+        }
 
     }
 }

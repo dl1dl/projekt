@@ -22,5 +22,25 @@ namespace projekt.Data
             _context.Add(recipe);
             _context.SaveChanges();
         }
+
+        public void EditRecipe(Recipe recipe)
+        {
+            Recipe originalRecipe = _context.Recipes.FirstOrDefault(p => p.RecipeID == recipe.RecipeID);
+            if (originalRecipe != null)
+            {
+                originalRecipe.Name = recipe.Name;
+                originalRecipe.Body = recipe.Body;
+            }
+            _context.SaveChanges();
+        }
+
+        public void DeleteRecipe(Recipe recipe)
+        {
+            if (recipe != null)
+            {
+                _context.Recipes.Remove(recipe);
+                _context.SaveChanges();
+            }
+        }
     }
 }
