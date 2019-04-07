@@ -16,5 +16,11 @@ namespace projekt.Data
         }
 
         public IQueryable<Recipe> Recipes => _context.Recipes;
+
+        public void AddRecipe(Recipe recipe)
+        {
+            _context.Add(recipe);
+            _context.SaveChanges();
+        }
     }
 }

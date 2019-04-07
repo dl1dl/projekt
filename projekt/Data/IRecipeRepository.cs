@@ -10,5 +10,7 @@ namespace projekt.Data
     public interface IRecipeRepository
     {
         IQueryable<Recipe> Recipes { get; }
+
+        void AddRecipe(Recipe recipe);
     }
 }

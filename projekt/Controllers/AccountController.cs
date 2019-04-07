@@ -36,7 +36,7 @@ namespace projekt.Controllers
             if (ModelState.IsValid)
             {
                 WebAppUser user = await _userManager.FindByEmailAsync(model.Email);
-                if (User != null)
+                if (user != null)
                 {
                     await _signInManager.SignOutAsync();
                     Microsoft.AspNetCore.Identity.SignInResult result =
@@ -57,6 +57,38 @@ namespace projekt.Controllers
         {
             await _signInManager.SignOutAsync();
             return Redirect("/");
+        }
+
+        [AllowAnonymous]
+        public ViewResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Register(CreateUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                WebAppUser user = new WebAppUser
+                {
+                    Email = model.Email,
+                    UserName = model.Email
+                };
+
+                IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(model);
         }
     }
 }

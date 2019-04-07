@@ -1,0 +1,21 @@
+﻿@model CreateUserModel
+
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<h2>Rejestracja</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="Email">email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password">hasło</label>
+        <input type="password" asp-for="Password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Utwórz konto</button>
+</form>

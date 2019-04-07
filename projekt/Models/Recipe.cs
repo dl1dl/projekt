@@ -12,6 +12,8 @@ namespace projekt.Models
         public int CategoryId { get; set; }
         public int DiffLevelId { get; set; }
 
+        public WebAppUser Auth { get; set; }
+
         public string Name { get; set; }
         public string Body { get; set; }
     }
