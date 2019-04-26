@@ -90,9 +90,9 @@ namespace projekt
             });
 
             
-            SeedData.PopulateWithCategories(app);
-            SeedData.PopulateWithDiffLevels(app);
-            SeedData.PopulateWithRecipes(app);
+            //SeedData.PopulateWithCategories(app);
+            //SeedData.PopulateWithDiffLevels(app);
+            //SeedData.PopulateWithRecipes(app);
             AppIdentityDbContext.AddAdminWithRole(app.ApplicationServices, Configuration).Wait();
         }
     }

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace projekt.Models
+namespace projekt.Models.ViewModels
 {
-    public class Category
+    public class NewRecipe
     {
-        public int CategoryID { get; set; }
-
         public string Name { get; set; }
-        ICollection<Recipe> Recipes { get; set; }
+        public string Body { get; set; }
     }
 }

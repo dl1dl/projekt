@@ -65,7 +65,7 @@ namespace projekt.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("UsersList");
+                    return RedirectToAction("Users");
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace projekt.Controllers
                 IdentityResult result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("UsersList");
+                    return RedirectToAction("Users");
                 }
                 else
                 {
@@ -101,7 +101,7 @@ namespace projekt.Controllers
             {
                 ModelState.AddModelError("", "Brak takiego użytkownika");
             }
-            return View("UsersList");
+            return View("Users");
         }
 
         public async Task<IActionResult> EditUser(string id)
@@ -113,7 +113,7 @@ namespace projekt.Controllers
             }
             else
             {
-                return RedirectToAction("UsersList");
+                return RedirectToAction("Users");
             }
         }
 
@@ -160,7 +160,7 @@ namespace projekt.Controllers
                     IdentityResult result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("UsersList");
+                        return RedirectToAction("Users");
                     }
                     else
                     {

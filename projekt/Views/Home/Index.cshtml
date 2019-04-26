@@ -4,6 +4,15 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if  (ViewBag.IsLogged)
+{
+    <a asp-controller="Recipe" asp-action="AddRecipe" class="btn btn-success">Dodaj przepis</a>
+}
+else  
+{
+    <p>Zaloguj się aby dodać przepis</p>
+}
+
 <h4>przepisy:</h4>
 
 @foreach (var recipe in Model.Recipes)

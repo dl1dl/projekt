@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using projekt.Models;
 
 namespace projekt.Data
@@ -15,7 +16,7 @@ namespace projekt.Data
             _context = con;
         }
 
-        public IQueryable<Recipe> Recipes => _context.Recipes;
+        public IQueryable<Recipe> Recipes => _context.Recipes.Include(r => r.Author).ThenInclude(r => r.Recipes);
 
         public void AddRecipe(Recipe recipe)
         {

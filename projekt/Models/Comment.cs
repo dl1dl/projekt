@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace projekt.Models
 {
-    public class Commentary
+    public class Comment
     {
-        public int CommentaryID { get; set; }
-        public int AuthorId { get; set; }
-        public int RecipeId { get; set; }
+        public int CommentID { get; set; }
 
+        public WebAppUser Author { get; set; }
+        public Recipe Recipe { get; set; }
         public string Body { get; set; }
     }
 }

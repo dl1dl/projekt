@@ -1,9 +1,7 @@
 ﻿@model Recipe
 
 <div>
-    <h2>@Model.Name</h2>
-    <!--<h3>Kategoria: @Model.CategoryId, trudność wykonania: @Model.DiffLevelId</h3>-->
-    
+    <h2>@Model.Name</h2>    
     <p>@Model.Body</p>
 
     <form asp-controller="Home" asp-action="Details">

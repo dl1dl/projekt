@@ -31,6 +31,15 @@ namespace projekt.Controllers
 
         public IActionResult Index()
         {
+            if (_signInManager.IsSignedIn(HttpContext.User))
+            {
+                ViewBag.IsLogged = true;
+            }
+            else
+            {
+                ViewBag.IsLogged = false;
+            }
+
             return View(new PrintVM
             {
                 Recipes = _recipeRepository.Recipes,
@@ -46,29 +55,5 @@ namespace projekt.Controllers
 
             return View(recipe);
         }
-
-        [Authorize]
-        public ViewResult AddRecipe() 
-        {
-            return View(new Recipe());
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> AddRecipe(Recipe recipe)
-        {
-            if (ModelState.IsValid)
-            {
-                WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
-                if (user != null)
-                {
-                    //recipe.Auth = user;
-                    _recipeRepository.AddRecipe(recipe);
-                    return RedirectToAction("Index");
-                }
-            }
-            return View(recipe);
-        }
-
     }
 }
