@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using projekt.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using projekt.Models;
 using projekt.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace projekt.Controllers
 {
@@ -18,16 +19,16 @@ namespace projekt.Controllers
         private IUserValidator<WebAppUser> _userValidator;
         private IPasswordValidator<WebAppUser> _passwordValidator;
         private IPasswordHasher<WebAppUser> _passwordHasher;
-        private IRecipeRepository _recipeRepository;
+        private readonly AppDbContext _context;
 
         public AdministrationController(UserManager<WebAppUser> umn, IUserValidator<WebAppUser> uvl, 
-            IPasswordValidator<WebAppUser> pvl, IPasswordHasher<WebAppUser> psh, IRecipeRepository rpo)
+            IPasswordValidator<WebAppUser> pvl, IPasswordHasher<WebAppUser> psh, AppDbContext ctx)
         {
             _userManager = umn;
             _userValidator = uvl;
             _passwordValidator = pvl;
             _passwordHasher = psh;
-            _recipeRepository = rpo;
+            _context = ctx;
         }
 
         public ViewResult Index()
@@ -35,47 +36,14 @@ namespace projekt.Controllers
             return View();
         }
 
-        public ViewResult Users()
+        public async Task<ViewResult> Users()
         {
-            return View(_userManager.Users);
+            return View(await _userManager.Users.ToListAsync());
         }
 
-        public ViewResult Recipes()
+        public async Task<ViewResult> Recipes()
         {
-            return View(_recipeRepository.Recipes);
-        }
-
-        public ViewResult CreateUser()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserModel newuser)
-        {
-            if (ModelState.IsValid)
-            {
-                WebAppUser user = new WebAppUser
-                {
-                    UserName = newuser.Email,
-                    Email = newuser.Email
-                };
-
-                IdentityResult result = await _userManager.CreateAsync(user, newuser.Password);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Users");
-                }
-                else
-                {
-                    foreach (IdentityError error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            return View(newuser);
+            return View(await _context.Recipes.ToListAsync());
         }
 
         [HttpPost]
@@ -181,25 +149,38 @@ namespace projekt.Controllers
 
         public ViewResult EditRecipe(int id)
         {
-            return View(_recipeRepository.Recipes.FirstOrDefault(p => p.RecipeID == id));
+            return View(_context.Recipes.FirstOrDefault(p => p.RecipeID == id));
         }
 
         [HttpPost]
         public IActionResult EditRecipe(Recipe recipe)
         {
-            if (ModelState.IsValid)
+            Recipe originalRecipe = _context.Recipes.FirstOrDefault(p => p.RecipeID == recipe.RecipeID);
+            if (originalRecipe != null)
             {
-                _recipeRepository.EditRecipe(recipe);
-                return RedirectToAction("Recipes");
+                originalRecipe.Name = recipe.Name;
+                originalRecipe.Body = recipe.Body;
             }
+            _context.SaveChanges();
+
+            /*if (ModelState.IsValid)
+            {
+                _context.EditRecipe(recipe);
+                return RedirectToAction("Recipes");
+            }*/
             return View(recipe);
         }
 
         [HttpPost]
         public IActionResult DeleteRecipe(int id)
         {
-            Recipe recipe = _recipeRepository.Recipes.FirstOrDefault(p => p.RecipeID == id);
-            _recipeRepository.DeleteRecipe(recipe);
+            Recipe recipe = _context.Recipes.FirstOrDefault(p => p.RecipeID == id);
+            if (recipe != null)
+            {
+                _context.Recipes.Remove(recipe);
+                _context.SaveChanges();
+            }
+            //_recipeRepository.DeleteRecipe(recipe);
             return RedirectToAction("Recipes");
         }
     }

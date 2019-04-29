@@ -16,5 +16,6 @@ namespace projekt.Data
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<DifficultyLevel> DifficultyLevels { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }
