@@ -1,0 +1,25 @@
+﻿@model Recipe
+
+@{
+    ViewData["Title"] = "Edycja przepisu";
+}
+
+<h2>Edytuj przepis</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="EditRecipe" method="post">
+    <input type="hidden" asp-for="RecipeID" />
+    <div class="form-group">
+        <label asp-for="Name">Nazwa:</label>
+        <input asp-for="Name" class="form-control">
+    </div>
+    <div class="form-group">
+        <label asp-for="Body">Treść:</label>
+        <textarea asp-for="Body" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">Zapisz zmiany</button>
+    <a class="btn btn-danger" asp-action="Recipes">Anuluj</a>
+</form>
+

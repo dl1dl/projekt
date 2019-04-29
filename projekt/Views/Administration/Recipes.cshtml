@@ -36,7 +36,7 @@
                 <td></td>   
                 <td>
                     <form asp-action="DeleteRecipe" asp-route-id="@recipe.RecipeID" method="post">
-                        <a class="btn btn-success" asp-action="EditRecipe" asp-route-id="@recipe.RecipeID">Edytuj</a>
+                        <a class="btn btn-success" asp-action="EditRecipe" asp-route-recipeID="@recipe.RecipeID">Edytuj</a>
                         <button type="submit" class="btn btn-danger">Usuń</button>
                     </form>
                 </td>
