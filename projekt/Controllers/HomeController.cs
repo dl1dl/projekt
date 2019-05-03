@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
 using projekt.Models.ViewModels;
@@ -13,18 +14,14 @@ namespace projekt.Controllers
 {
     public class HomeController : Controller
     {
-        private IRecipeRepository _recipeRepository;
-        private ICatRepository _categoryRepository;
-        private IDiffLevelRepository _diffLevelRepository;
         private readonly UserManager<WebAppUser> _userManager;
         private readonly SignInManager<WebAppUser> _signInManager;
+        private readonly AppDbContext _context;
 
-        public HomeController(IRecipeRepository rec, ICatRepository cat, IDiffLevelRepository dif, 
+        public HomeController(AppDbContext ctx, IRecipeRepository rec, ICatRepository cat, IDiffLevelRepository dif, 
             UserManager<WebAppUser> umn, SignInManager<WebAppUser> sim)
         {
-            _recipeRepository = rec;
-            _categoryRepository = cat;
-            _diffLevelRepository = dif;
+            _context = ctx;
             _userManager = umn;
             _signInManager = sim;
         }
@@ -42,15 +39,21 @@ namespace projekt.Controllers
 
             return View(new PrintVM
             {
-                Recipes = _recipeRepository.Recipes,
-                Categories = _categoryRepository.Categories,
-                DiffLevels = _diffLevelRepository.DifficultyLevels
+                Recipes = _context.Recipes,
+                Categories = _context.Categories,
+                DiffLevels = _context.DifficultyLevels
             });
         }
 
-        public ViewResult Details(int recipeID)
+        public async Task<ViewResult> Details(int recipeID)
         {
-            Recipe recipe = _recipeRepository.Recipes.FirstOrDefault(x => x.RecipeID == recipeID);
+            Recipe recipe = await _context.Recipes
+                .Include(r => r.Author)
+                .Include(r => r.Category)
+                .Include(r => r.DifficultyLevel)
+                .Include(r => r.Comments).ThenInclude(c => c.Author)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.RecipeID == recipeID);
             ViewBag.recipeName = recipe.Name;
 
             return View(recipe);

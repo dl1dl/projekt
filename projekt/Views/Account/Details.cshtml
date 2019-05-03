@@ -1,0 +1,15 @@
+﻿@model  UserDetails
+
+@{
+    ViewData["Title"] = "Profil użytkownika";
+}
+
+<h2>Profil użytkownika @Model.User.Email</h2>
+
+<h3>Dodane przepisy:</h3>
+<ul>
+    @foreach (var recipe in Model.Recipes)
+    {
+        <li>@recipe.Name</li>
+    }
+</ul>

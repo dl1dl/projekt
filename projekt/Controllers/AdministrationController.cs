@@ -79,10 +79,8 @@ namespace projekt.Controllers
             {
                 return View(user);
             }
-            else
-            {
-                return RedirectToAction("Users");
-            }
+
+            return RedirectToAction("Users");
         }
 
         [HttpPost]

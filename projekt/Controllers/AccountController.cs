@@ -5,20 +5,42 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using projekt.Data;
 using projekt.Models;
+using projekt.Models.ViewModels;
 
 namespace projekt.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly AppDbContext _context;
         private UserManager<WebAppUser> _userManager;
         private SignInManager<WebAppUser> _signInManager;
 
-        public AccountController(UserManager<WebAppUser> umn, SignInManager<WebAppUser> sim)
+        public AccountController(AppDbContext ctx, UserManager<WebAppUser> umn, SignInManager<WebAppUser> sim)
         {
+            _context = ctx;
             _userManager = umn;
             _signInManager = sim;
+        }
+
+        public async Task<IActionResult> Details(string id)
+        {
+            WebAppUser user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                UserDetails userDetails = new UserDetails
+                {
+                    User = user,
+                    Recipes = _context.Recipes.Where(b => b.Author == user)
+                };
+
+                return View(userDetails);
+            }
+
+            return View();
         }
 
         [AllowAnonymous]
