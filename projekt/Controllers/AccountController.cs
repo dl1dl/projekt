@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
 using projekt.Models.ViewModels;
@@ -27,20 +28,21 @@ namespace projekt.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            WebAppUser user = await _userManager.FindByIdAsync(id);
+            //WebAppUser user = await _userManager.FindByIdAsync(id);
+            WebAppUser user = await _context.Users.Include(r => r.Recipes).SingleAsync(u => u.Id == id);
 
             if (user != null)
             {
-                UserDetails userDetails = new UserDetails
+                /*UserDetails userDetails = new UserDetails
                 {
                     User = user,
                     Recipes = _context.Recipes.Where(b => b.Author == user)
-                };
+                };*/
 
-                return View(userDetails);
+                return View(user);
             }
 
-            return View();
+            return NotFound();
         }
 
         [AllowAnonymous]

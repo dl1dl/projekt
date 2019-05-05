@@ -3,11 +3,7 @@
 <div>
     <h2>@Model.Name</h2>    
     <p>@Model.Body</p>
-
-    <form asp-controller="Home" asp-action="Details">
-        <input type="hidden" asp-for="RecipeID" />
-        <button type="submit" class="btn btn-primary">Zobacz więcej</button>
-    </form>
+    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@Model.RecipeID" class="btn btn-primary">Zobacz więcej</a>
 </div>
 <br />
 <hr />

@@ -1,0 +1,17 @@
+﻿@model Recipe
+
+@{
+    ViewData["Title"] = @ViewBag.recipeName;
+}
+
+<div>
+    <h2>@Model.Name</h2>
+
+    <p>@Model.Body</p>
+    autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a>
+    
+</div>
+
+<div>
+    <h3>Komentarze:</h3>
+</div>

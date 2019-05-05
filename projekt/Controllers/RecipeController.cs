@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using projekt.Models;
 using projekt.Models.ViewModels;
 using projekt.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace projekt.Controllers
 {
@@ -15,14 +16,12 @@ namespace projekt.Controllers
     public class RecipeController : Controller
     {
         private readonly AppDbContext _context;
-        private IRecipeRepository _recipeRepository;
         private readonly UserManager<WebAppUser> _userManager;
         private readonly SignInManager<WebAppUser> _signInManager;
 
         public RecipeController(AppDbContext ctx, IRecipeRepository rec, UserManager<WebAppUser> umn, SignInManager<WebAppUser> sim)
         {
             _context = ctx;
-            _recipeRepository = rec;
             _userManager = umn;
             _signInManager = sim;
         }
@@ -55,10 +54,11 @@ namespace projekt.Controllers
         public async Task<IActionResult> AddRecipe(Recipe newRecipe)
         {
             WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
-            ViewBag.AuthorID = user.Id;
+            //ViewBag.AuthorID = user.Id;
 
             if (ModelState.IsValid)
             {
+                newRecipe.Author = user;
                 _context.Recipes.Add(newRecipe);
                 _context.SaveChanges();
 
@@ -68,6 +68,21 @@ namespace projekt.Controllers
             //user.Recipes.Add(newRecipe);
 
             return View(newRecipe);
+        }
+
+        [AllowAnonymous]
+        public async Task<ViewResult> Details(int id)
+        {
+            Recipe recipe = await _context.Recipes
+                .Include(r => r.Author)
+                .Include(r => r.Category)
+                .Include(r => r.DifficultyLevel)
+                .Include(r => r.Comments).ThenInclude(c => c.Author)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.RecipeID == id);
+            ViewBag.recipeName = recipe.Name;
+
+            return View(recipe);
         }
     }
 }

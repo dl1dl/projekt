@@ -56,11 +56,12 @@ namespace projekt
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz1234567890_-.@!$%#^&*()+=<>,/?";
 
             })
-                    .AddEntityFrameworkStores<AppIdentityDbContext>()
+                    //.AddEntityFrameworkStores<AppIdentityDbContext>()
+                    .AddEntityFrameworkStores<AppDbContext>()
                     .AddDefaultTokenProviders();
 
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("IdentityContext")));
+            /*services.AddDbContext<AppIdentityDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("IdentityContext")));*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,7 +93,8 @@ namespace projekt
             //SeedData.PopulateWithCategories(app);
             //SeedData.PopulateWithDiffLevels(app);
             //SeedData.PopulateWithRecipes(app);
-            AppIdentityDbContext.AddAdminWithRole(app.ApplicationServices, Configuration).Wait();
+            //AppIdentityDbContext.AddAdminWithRole(app.ApplicationServices, Configuration).Wait();
+            AppDbContext.AddAdminWithRole(app.ApplicationServices, Configuration).Wait();
         }
     }
 }
