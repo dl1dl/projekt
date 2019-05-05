@@ -43,7 +43,11 @@ namespace projekt.Controllers
 
         public async Task<ViewResult> Recipes()
         {
-            return View(await _context.Recipes.ToListAsync());
+            return View(await _context.Recipes
+                .Include(x => x.Author)
+                .Include(x => x.Category)
+                .Include(x => x.DifficultyLevel)
+                .ToListAsync());
         }
 
         [HttpPost]

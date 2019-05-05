@@ -39,31 +39,24 @@ namespace projekt.Data
         {
             AppDbContext context = app.ApplicationServices.GetRequiredService<AppDbContext>();
             context.Database.Migrate();
-            if (!context.Categories.Any())
+            if (!context.Recipes.Any())
             {
-                context.Categories.AddRange(
-                    new Category
-                    {
-                        Name = "Danie główne",
-                    },
-                    new Category
-                    {
-                        Name = "Zupa",
-                    },
-                    new Category
-                    {
-                        Name = "Deser",
-                    },
-                    new Category
-                    {
-                        Name = "Śniadanie",
-                    },
-                    new Category
-                    {
-                        Name = "Sałatka",
-                    }
-                );
+                var cat = new Category[]
+                {
+                    new Category { Name = "Danie główne"},
+                    new Category { Name = "Zupa"},
+                    new Category { Name = "Deser"},
+                    new Category { Name = "Śniadanie"},
+                    new Category { Name = "Sałatka"}
+                };
+
+                foreach (Category c in cat)
+                {
+                    context.Categories.Add(c);
+                }
+                context.SaveChanges();
             }
+            
         }
 
         public static void PopulateWithDiffLevels(IApplicationBuilder app)
