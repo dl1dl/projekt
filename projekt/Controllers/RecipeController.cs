@@ -9,6 +9,7 @@ using projekt.Models;
 using projekt.Models.ViewModels;
 using projekt.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace projekt.Controllers
 {
@@ -31,41 +32,35 @@ namespace projekt.Controllers
             return View();
         }
 
-        public async Task<ViewResult> AddRecipe()
+        public ViewResult AddRecipe()
         {
-            WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
-            ViewBag.AuthorID = user.Id;
+            var categories = from c in _context.Categories orderby c.Name select c;
+            ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", null);
 
             return View();
         }
 
-        /*[HttpPost]
-        public RedirectToActionResult AddRecipe(Recipe newRecipe)
-        {
-            if (ModelState.IsValid)
-            {
-                _recipeRepository.AddRecipe(newRecipe);
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("AddRecipe", newRecipe);
-        }*/
-
         [HttpPost]
-        public async Task<IActionResult> AddRecipe(Recipe newRecipe)
+        public async Task<IActionResult> AddRecipe(NewRecipeVM newRecipe)
         {
-            WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
-            //ViewBag.AuthorID = user.Id;
-
             if (ModelState.IsValid)
             {
-                newRecipe.Author = user;
-                _context.Recipes.Add(newRecipe);
+                Recipe recipe = new Recipe()
+                {
+                    Author = await _userManager.GetUserAsync(HttpContext.User),
+                    Name = newRecipe.Name,
+                    Body = newRecipe.Body,
+                    Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync()
+                };
+                
+                _context.Recipes.Add(recipe);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index", "Home");
             }
 
-            //user.Recipes.Add(newRecipe);
+            var categories = from c in _context.Categories orderby c.Name select c;
+            ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", newRecipe.Category);
 
             return View(newRecipe);
         }

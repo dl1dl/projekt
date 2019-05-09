@@ -89,8 +89,6 @@ namespace projekt
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            
-            SeedData.PopulateWithCategories(app);   
             //SeedData.PopulateWithDiffLevels(app);
             //SeedData.PopulateWithRecipes(app);
             //AppIdentityDbContext.AddAdminWithRole(app.ApplicationServices, Configuration).Wait();

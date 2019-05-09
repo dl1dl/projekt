@@ -32,7 +32,7 @@
                 <td>@recipe.RecipeID</td>
                 <td>@recipe.Name</td>
                 <td><a asp-controller="Account" asp-action="Details" asp-route-id="@recipe.Author.Id">@recipe.Author</a></td>
-                <td></td>
+                <td>@recipe.Category.Name</td>
                 <td></td>
 
                 <td>

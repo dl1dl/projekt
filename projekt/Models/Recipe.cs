@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace projekt.Models
         public string Name { get; set; }
 
         public WebAppUser Author { get; set; }
+        [Required]
         public Category Category { get; set; }
         public DifficultyLevel DifficultyLevel { get; set; }
         public ICollection<Comment> Comments { get; set; }
