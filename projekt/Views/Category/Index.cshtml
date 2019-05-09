@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Wybierz kategorię: </h2>
+
+@foreach (var c in Model)
+{
+    <a asp-action="All" asp-route-categoryID="@c.CategoryID" class="btn btn-info">@c.Name</a>
+}

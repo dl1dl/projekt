@@ -1,0 +1,12 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "All";
+}
+
+<h2>Przepisy w kategorii @Model.Name</h2>
+
+@foreach (var r in Model.Recipes)
+{
+    <a asp-controller="Recipe" asp-action="Details" asp-route-recipeID="@r.RecipeID">@r.Name</a>
+}

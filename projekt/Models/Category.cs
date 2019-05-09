@@ -10,6 +10,6 @@ namespace projekt.Models
         public int CategoryID { get; set; }
 
         public string Name { get; set; }
-        ICollection<Recipe> Recipes { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
     }
 }
