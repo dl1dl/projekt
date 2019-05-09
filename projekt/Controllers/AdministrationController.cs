@@ -50,6 +50,14 @@ namespace projekt.Controllers
                 .ToListAsync());
         }
 
+        public async Task<ViewResult> Comments()
+        {
+            return View(await _context.Comments
+                .Include(x => x.Author)
+                .Include(x => x.Recipe)
+                .ToListAsync());
+        }
+
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -149,7 +157,6 @@ namespace projekt.Controllers
             return View(user);
         }
 
-        
 
         [HttpPost]
         public IActionResult DeleteRecipe(int id)

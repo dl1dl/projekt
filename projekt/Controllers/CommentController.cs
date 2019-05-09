@@ -41,5 +41,55 @@ namespace projekt.Controllers
 
             return RedirectToAction("Details", "Recipe", new { id = newComment.Recipe});
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            Comment comment = await _context.Comments
+                .Include(x => x.Author)
+                .FirstOrDefaultAsync(p => p.CommentID == id);
+
+            if (comment != null)
+            {
+                EditCommentVM commentToEdit = new EditCommentVM()
+                {
+                    Body = comment.Body,
+                    Author = comment.Author.Email,
+                    OriginalComment = comment.CommentID
+                };
+
+                return View(commentToEdit);
+            }
+
+            return RedirectToAction("Comments");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditCommentVM comment)
+        {
+            if (ModelState.IsValid)
+            {
+                Comment originalComment = await _context.Comments.FirstOrDefaultAsync(p => p.CommentID == comment.OriginalComment);
+                if (originalComment != null)
+                {
+                    originalComment.Body = comment.Body;
+                    _context.SaveChanges();
+                    return RedirectToAction("Comments", "Administration");
+                }
+            }
+
+            return View(comment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Comment comment = await _context.Comments.FirstOrDefaultAsync(p => p.CommentID == id);
+            if (comment != null)
+            {
+                _context.Comments.Remove(comment);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Comments", "Administration");
+        }
     }
 }

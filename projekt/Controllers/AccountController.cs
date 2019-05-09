@@ -29,7 +29,6 @@ namespace projekt.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
-            //WebAppUser user = await _userManager.FindByIdAsync(id);
             WebAppUser user = await _context.Users
                 .Include(r => r.Recipes)
                 .Include(c => c.Comments)
@@ -38,12 +37,6 @@ namespace projekt.Controllers
 
             if (user != null)
             {
-                /*UserDetails userDetails = new UserDetails
-                {
-                    User = user,
-                    Recipes = _context.Recipes.Where(b => b.Author == user)
-                };*/
-
                 return View(user);
             }
 
