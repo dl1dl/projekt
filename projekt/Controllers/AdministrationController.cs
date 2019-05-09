@@ -149,9 +149,9 @@ namespace projekt.Controllers
             return View(user);
         }
 
-        public ViewResult EditRecipe(int recipeID)
+        public ViewResult EditRecipe(int id)
         {
-            return View(_context.Recipes.FirstOrDefault(p => p.RecipeID == recipeID));
+            return View(_context.Recipes.FirstOrDefault(p => p.RecipeID == id));
         }
 
         [HttpPost]

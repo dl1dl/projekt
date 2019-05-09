@@ -26,6 +26,7 @@ namespace projekt.Controllers
             _signInManager = sim;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
             //WebAppUser user = await _userManager.FindByIdAsync(id);

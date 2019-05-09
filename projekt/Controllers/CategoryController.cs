@@ -26,13 +26,13 @@ namespace projekt.Controllers
             return View(await categories.ToListAsync());
         }
 
-        public async Task<IActionResult> All(int categoryID)
+        public async Task<IActionResult> AllRecipes(int id)
         {
 
             Category category = await _context.Categories
                 .Include(c => c.Recipes)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.CategoryID == categoryID);
+                .FirstOrDefaultAsync(m => m.CategoryID == id);
 
             return View(category);
         }

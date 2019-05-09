@@ -45,7 +45,7 @@ namespace projekt.Controllers
             });
         }
 
-        public async Task<ViewResult> Details(int recipeID)
+        public async Task<ViewResult> Details(int id)
         {
             Recipe recipe = await _context.Recipes
                 .Include(r => r.Author)
@@ -53,7 +53,7 @@ namespace projekt.Controllers
                 .Include(r => r.DifficultyLevel)
                 .Include(r => r.Comments).ThenInclude(c => c.Author)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.RecipeID == recipeID);
+                .FirstOrDefaultAsync(m => m.RecipeID == id);
             ViewBag.recipeName = recipe.Name;
 
             return View(recipe);

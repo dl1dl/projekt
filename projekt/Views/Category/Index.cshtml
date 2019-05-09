@@ -7,5 +7,5 @@
 
 @foreach (var c in Model)
 {
-    <a asp-action="All" asp-route-categoryID="@c.CategoryID" class="btn btn-info">@c.Name</a>
+    <a asp-action="AllRecipes" asp-route-id="@c.CategoryID" class="btn btn-info">@c.Name</a>
 }
