@@ -7,7 +7,7 @@
 <h2>Profil użytkownika @Model.Email</h2>
 
 <h3>Dodane przepisy:</h3>
-@if (@Model.Recipes.Count() > 0) 
+@if (@Model.Recipes.Count() > 0)
 {
     <ul>
         @foreach (var recipe in Model.Recipes)
@@ -16,7 +16,25 @@
         }
     </ul>
 }
-else 
+else
 {
     <h4>Brak dodanych przepisów</h4>
+}
+
+<h3>Dodane przepisy:</h3>
+@if (@Model.Comments.Count() > 0)
+{
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <li>
+                <p>"@comment.Body"</p>
+                <p>przepis: <a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.Recipe.RecipeID">@comment.Recipe.Name</a></p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <h4>Brak opublikowanych komentarzy</h4>
 }

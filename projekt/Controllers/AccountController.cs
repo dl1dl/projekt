@@ -30,7 +30,11 @@ namespace projekt.Controllers
         public async Task<IActionResult> Details(string id)
         {
             //WebAppUser user = await _userManager.FindByIdAsync(id);
-            WebAppUser user = await _context.Users.Include(r => r.Recipes).SingleAsync(u => u.Id == id);
+            WebAppUser user = await _context.Users
+                .Include(r => r.Recipes)
+                .Include(c => c.Comments)
+                    .ThenInclude(r => r.Recipe)
+                .SingleAsync(u => u.Id == id);
 
             if (user != null)
             {
