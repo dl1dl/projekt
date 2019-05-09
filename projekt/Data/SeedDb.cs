@@ -12,12 +12,9 @@ namespace projekt.Data
         {
             context.Database.EnsureCreated();
 
-            if (context.Categories.Any())
+            if (!context.Categories.Any())
             {
-                return;
-            }
-
-            var cat = new Category[]
+                var cat = new Category[]
                 {
                     new Category { Name = "Danie główne"},
                     new Category { Name = "Zupa"},
@@ -26,12 +23,32 @@ namespace projekt.Data
                     new Category { Name = "Sałatka"}
                 };
 
-            foreach (Category c in cat)
-            {
-                context.Categories.Add(c);
+                foreach (Category c in cat)
+                {
+                    context.Categories.Add(c);
+                }
+
+                context.SaveChanges();
             }
 
-            context.SaveChanges();
+            if (!context.DifficultyLevels.Any())
+            {
+                var dif = new DifficultyLevel[]
+                {
+                    new DifficultyLevel { Name = "Łatwy"},
+                    new DifficultyLevel { Name = "Średni"},
+                    new DifficultyLevel { Name = "Trudny"},
+                };
+
+                foreach (DifficultyLevel d in dif)
+                {
+                    context.DifficultyLevels.Add(d);
+                }
+
+                context.SaveChanges();
+            }
+
+
         }
     }
 }

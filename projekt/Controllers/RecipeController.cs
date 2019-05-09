@@ -37,6 +37,9 @@ namespace projekt.Controllers
             var categories = from c in _context.Categories orderby c.Name select c;
             ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", null);
 
+            var dLevels = from d in _context.DifficultyLevels orderby d.Name select d;
+            ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", null);
+
             return View();
         }
 
@@ -50,7 +53,8 @@ namespace projekt.Controllers
                     Author = await _userManager.GetUserAsync(HttpContext.User),
                     Name = newRecipe.Name,
                     Body = newRecipe.Body,
-                    Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync()
+                    Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync(),
+                    DifficultyLevel = await _context.DifficultyLevels.Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync()
                 };
                 
                 _context.Recipes.Add(recipe);
@@ -61,6 +65,9 @@ namespace projekt.Controllers
 
             var categories = from c in _context.Categories orderby c.Name select c;
             ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", newRecipe.Category);
+
+            var dLevels = from d in _context.DifficultyLevels orderby d.Name select d;
+            ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", newRecipe.DifficultyLevel);
 
             return View(newRecipe);
         }

@@ -14,6 +14,7 @@ namespace projekt.Models
         public WebAppUser Author { get; set; }
         [Required]
         public Category Category { get; set; }
+        [Required]
         public DifficultyLevel DifficultyLevel { get; set; }
         public ICollection<Comment> Comments { get; set; }
         

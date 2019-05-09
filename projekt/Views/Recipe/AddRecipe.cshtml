@@ -10,6 +10,10 @@
 
 <form asp-action="AddRecipe" method="post">
     <div class="form-group">
+        <label asp-for="DifficultyLevel" class="control-label">Poziom trudności wykonania:</label>
+        <select asp-for="DifficultyLevel" class="form-control" asp-items="ViewBag.DifficultyLevels"></select>
+    </div>
+    <div class="form-group">
         <label asp-for="Name">Nazwa</label>
         <input asp-for="Name" class="form-control" />
     </div>

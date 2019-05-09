@@ -7,9 +7,11 @@
 <div>
     <h2>@Model.Name</h2>
 
-    <p>@Model.Body</p>
     <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a></p>
     <p>kategoria: <a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
+    <p>trudność wykonania: @Model.DifficultyLevel.Name</a></p>
+    <p>@Model.Body</p>
+
 
 </div>
 
