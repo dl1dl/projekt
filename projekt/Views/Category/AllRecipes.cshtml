@@ -6,7 +6,9 @@
 
 <h2>Przepisy w kategorii @Model.Name</h2>
 
+<ul>
 @foreach (var r in Model.Recipes)
 {
-    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@r.RecipeID">@r.Name</a>
+    <li><a asp-controller="Recipe" asp-action="Details" asp-route-id="@r.RecipeID">@r.Name</a></li>
 }
+</ul>

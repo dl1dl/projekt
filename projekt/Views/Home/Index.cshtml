@@ -4,11 +4,11 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if  (ViewBag.IsLogged)
+@if (ViewBag.IsLogged)
 {
     <a asp-controller="Recipe" asp-action="AddRecipe" class="btn btn-success">Dodaj przepis</a>
 }
-else  
+else
 {
     <p>Zaloguj się aby dodać przepis</p>
 }
@@ -17,17 +17,23 @@ else
 
 @foreach (var recipe in Model.Recipes)
 {
-    @Html.Partial("RecipePartialView", recipe)
+    <div>
+        <h2><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></h2>
+        <p>@recipe.Body</p>
+        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID" class="btn btn-primary">Zobacz więcej</a>
+    </div>
+    <br />
+    <hr />
 }
 
 <h4>kategorie:</h4>
 
-@foreach (var category in Model.Categories)
-{
-    <div>
-        <h3>@category.Name - @category.CategoryID</h3>
-    </div>
-}
+<ul>
+    @foreach (var category in Model.Categories)
+    {
+        <li><a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@category.CategoryID">@category.Name</a></li>
+    }
+</ul>
 
 <hr />
 <h4>pozoimy trudności:</h4>

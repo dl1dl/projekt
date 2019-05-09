@@ -32,11 +32,12 @@
                 <td>@recipe.RecipeID</td>
                 <td>@recipe.Name</td>
                 <td><a asp-controller="Account" asp-action="Details" asp-route-id="@recipe.Author.Id">@recipe.Author</a></td>
-                <td>@recipe.Category.Name</td>
+                <td><a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@recipe.Category.CategoryID">@recipe.Category.Name</a></td>
                 <td></td>
 
                 <td>
                     <form asp-action="DeleteRecipe" asp-route-id="@recipe.RecipeID" method="post">
+                        <a class="btn btn-info" asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">Szczegóły</a>
                         <a class="btn btn-success" asp-action="EditRecipe" asp-route-id="@recipe.RecipeID">Edytuj</a>
                         <button type="submit" class="btn btn-danger">Usuń</button>
                     </form>
