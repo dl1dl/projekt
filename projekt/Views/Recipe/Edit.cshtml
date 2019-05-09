@@ -1,24 +1,26 @@
-﻿@model NewRecipeVM
+﻿@model EditRecipeVM
 
 @{
-    ViewData["Title"] = "Dodawanie przepisu";
+    ViewData["Title"] = "Edycja przepisu";
 }
 
-<h2>Dodaj przepis</h2>
+<h2>Edytuj przepis</h2>
+<h1>@ViewBag.IDD</h1>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
-<form asp-action="AddRecipe" method="post">
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="OriginalRecipe" value="@Model.OriginalRecipe" />
     <div class="form-group">
         <label asp-for="DifficultyLevel" class="control-label">Poziom trudności wykonania:</label>
         <select asp-for="DifficultyLevel" class="form-control" asp-items="ViewBag.DifficultyLevels"></select>
     </div>
     <div class="form-group">
-        <label asp-for="Name">Nazwa</label>
-        <input asp-for="Name" class="form-control" />
+        <label asp-for="Name">Nazwa:</label>
+        <input asp-for="Name" class="form-control">
     </div>
     <div class="form-group">
-        <label asp-for="Body">Opis</label>
+        <label asp-for="Body">Treść:</label>
         <textarea asp-for="Body" class="form-control"></textarea>
     </div>
     <div class="form-group">
@@ -26,7 +28,7 @@
         <select asp-for="Category" class="form-control" asp-items="ViewBag.Categories"></select>
     </div>
 
-    <button type="submit" class="btn btn-success">Dodaj</button>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-danger">Anuluj</a>
+    <button class="btn btn-success">Zapisz zmiany</button>
+    <a class="btn btn-danger" asp-controller="Administration" asp-action="Recipes">Anuluj</a>
 </form>
 

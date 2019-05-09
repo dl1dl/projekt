@@ -149,28 +149,7 @@ namespace projekt.Controllers
             return View(user);
         }
 
-        public ViewResult EditRecipe(int id)
-        {
-            return View(_context.Recipes.FirstOrDefault(p => p.RecipeID == id));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditRecipe(Recipe recipe)
-        {
-            if (ModelState.IsValid)
-            {
-                Recipe originalRecipe = await _context.Recipes.FirstOrDefaultAsync(p => p.RecipeID == recipe.RecipeID);
-                if (originalRecipe != null)
-                {
-                    originalRecipe.Name = recipe.Name;
-                    originalRecipe.Body = recipe.Body;
-                    _context.SaveChanges();
-                    return RedirectToAction("Recipes");
-                }
-            }
-
-            return View(recipe);
-        }
+        
 
         [HttpPost]
         public IActionResult DeleteRecipe(int id)

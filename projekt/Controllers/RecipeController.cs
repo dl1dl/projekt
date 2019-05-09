@@ -32,7 +32,7 @@ namespace projekt.Controllers
             return View();
         }
 
-        public ViewResult AddRecipe()
+        public ViewResult Add()
         {
             var categories = from c in _context.Categories orderby c.Name select c;
             ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", null);
@@ -44,7 +44,7 @@ namespace projekt.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRecipe(NewRecipeVM newRecipe)
+        public async Task<IActionResult> Add(NewRecipeVM newRecipe)
         {
             if (ModelState.IsValid)
             {
@@ -70,6 +70,61 @@ namespace projekt.Controllers
             ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", newRecipe.DifficultyLevel);
 
             return View(newRecipe);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            Recipe recipe = _context.Recipes
+                .Include(x => x.Category)
+                .Include(x => x.DifficultyLevel)
+                .FirstOrDefault(p => p.RecipeID == id);
+
+            if (recipe != null)
+            {
+                EditRecipeVM recipeToEdit = new EditRecipeVM()
+                {
+                    Name = recipe.Name,
+                    Body = recipe.Body,
+                    Category = recipe.Category.CategoryID,
+                    DifficultyLevel = recipe.DifficultyLevel.DifficultyLevelID,
+                    OriginalRecipe = id
+                };
+
+                var categories = from c in _context.Categories orderby c.Name select c;
+                ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", recipeToEdit.Category);
+
+                var dLevels = from d in _context.DifficultyLevels orderby d.Name select d;
+                ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", recipeToEdit.DifficultyLevel);
+
+                return View(recipeToEdit);
+            }
+            return RedirectToAction("Recipes");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditRecipeVM recipe)
+        {
+            if (ModelState.IsValid)
+            {
+                Recipe originalRecipe = await _context.Recipes.FirstOrDefaultAsync(p => p.RecipeID == recipe.OriginalRecipe);
+                if (originalRecipe != null)
+                {
+                    originalRecipe.Name = recipe.Name;
+                    originalRecipe.Body = recipe.Body;
+                    originalRecipe.Category = await _context.Categories.Where(x => x.CategoryID == recipe.Category).SingleAsync();
+                    originalRecipe.DifficultyLevel = await _context.DifficultyLevels.Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
+                    _context.SaveChanges();
+                    return RedirectToAction("Recipes", "Administration");
+                }
+            }
+
+            var categories = from c in _context.Categories orderby c.Name select c;
+            ViewBag.Categories = new SelectList(categories.AsNoTracking(), "CategoryID", "Name", recipe.Category);
+
+            var dLevels = from d in _context.DifficultyLevels orderby d.Name select d;
+            ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", recipe.DifficultyLevel);
+
+            return View(recipe);
         }
 
         [AllowAnonymous]
