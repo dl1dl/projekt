@@ -20,6 +20,7 @@ namespace projekt.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<DifficultyLevel> DifficultyLevels { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<FavoriteRecipe> FavoriteRecipes { get; set; }
 
         public static async Task AddAdminWithRole(IServiceProvider serviceProvider, IConfiguration configuration)
         {

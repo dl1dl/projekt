@@ -9,7 +9,7 @@ namespace projekt.Models
     public class WebAppUser : IdentityUser
     {
         public ICollection<Recipe> Recipes { get; set; }
-        //public ICollection<Recipe> Favorites { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<FavoriteRecipe> FavoriteRecipes { get; set; }
     }
 }

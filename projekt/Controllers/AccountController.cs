@@ -33,6 +33,8 @@ namespace projekt.Controllers
                 .Include(r => r.Recipes)
                 .Include(c => c.Comments)
                     .ThenInclude(r => r.Recipe)
+                .Include(f => f.FavoriteRecipes)
+                    .ThenInclude(r => r.Recipe)
                 .SingleAsync(u => u.Id == id);
 
             if (user != null)

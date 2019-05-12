@@ -128,7 +128,7 @@ namespace projekt.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ViewResult> Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             Recipe recipe = await _context.Recipes
                 .Include(r => r.Author)
@@ -137,9 +137,67 @@ namespace projekt.Controllers
                 .Include(r => r.Comments).ThenInclude(c => c.Author)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
-            ViewBag.recipeName = recipe.Name;
+
+            ViewBag.isAuthor = false;
+            ViewBag.isInFavorites = false;
+            ViewBag.isLogged = false;
+
+            if (_signInManager.IsSignedIn(HttpContext.User))
+            {
+                ViewBag.isLogged = true;
+                WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
+                if (recipe.Author.Id == user.Id)
+                {
+                    ViewBag.isAuthor = true;
+                }
+                else
+                {
+                    if (_context.FavoriteRecipes.Any())
+                    {
+                        FavoriteRecipe favoriteRecipe = await _context.FavoriteRecipes
+                    .Include(r => r.Recipe)
+                    .Include(r => r.User)
+                    .Where(r => r.Recipe.RecipeID == id && r.User.Id == user.Id)
+                    .SingleAsync();
+
+                        if (!(favoriteRecipe == null))
+                        {
+                            ViewBag.isInFavorites = true;
+                            ViewBag.favoriteRecipeID = favoriteRecipe.FavoriteRecipeID;
+                        }
+                    }
+                }
+            }
 
             return View(recipe);
+        }
+
+        public async Task<IActionResult> AddToFavorites(int id)
+        {
+            FavoriteRecipe favoriteRecipe = new FavoriteRecipe()
+            {
+                User = await _userManager.GetUserAsync(HttpContext.User),
+                Recipe = await _context.Recipes.Where(x => x.RecipeID == id).SingleAsync()
+            };
+
+            _context.FavoriteRecipes.Add(favoriteRecipe);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Recipe", new { id = id });
+        }
+
+        public async Task<IActionResult> RemoveFromFavorites(int id)
+        {
+            FavoriteRecipe favoriteRecipe = await _context.FavoriteRecipes
+                .Include(r => r.Recipe)
+                .Where(r => r.FavoriteRecipeID == id).SingleAsync();
+
+            int returnId = favoriteRecipe.Recipe.RecipeID;
+
+            _context.FavoriteRecipes.Remove(favoriteRecipe);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Recipe", new { id = returnId });
         }
     }
 }

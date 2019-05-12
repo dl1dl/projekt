@@ -21,7 +21,7 @@ else
     <h4>Brak dodanych przepisów</h4>
 }
 
-<h3>Dodane przepisy:</h3>
+<h3>Dodane komentarze:</h3>
 @if (@Model.Comments.Count() > 0)
 {
     <ul>
@@ -37,4 +37,23 @@ else
 else
 {
     <h4>Brak opublikowanych komentarzy</h4>
+}
+
+<h3>Przepisy dodane do ulubionych:</h3>
+@if (@Model.FavoriteRecipes.Count() > 0)
+{
+    <ul>
+        @foreach (var recipe in Model.FavoriteRecipes)
+        {
+        <li>
+            <p><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Recipe.RecipeID">@recipe.Recipe.Name</a></p>
+            <a asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@recipe.FavoriteRecipeID" class="btn btn-danger">usuń z ulubionych</a>
+
+        </li>
+        }
+    </ul>
+}
+else
+{
+    <h4>Brak ulubionych przepisów</h4>
 }
