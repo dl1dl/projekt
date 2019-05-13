@@ -21,7 +21,8 @@
             }
             else
             {
-                <a asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@ViewBag.favoriteRecipeID" class="btn btn-danger">usuń z ulubionych</a>
+                <a asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@ViewBag.favoriteRecipeID" 
+                    asp-route-recipeId="@Model.RecipeID" class="btn btn-danger">usuń z ulubionych</a>
             }
         }
     }

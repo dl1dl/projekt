@@ -155,10 +155,8 @@ namespace projekt.Controllers
                     if (_context.FavoriteRecipes.Any())
                     {
                         FavoriteRecipe favoriteRecipe = await _context.FavoriteRecipes
-                    .Include(r => r.Recipe)
-                    .Include(r => r.User)
-                    .Where(r => r.Recipe.RecipeID == id && r.User.Id == user.Id)
-                    .SingleAsync();
+                            .Where(r => r.RecipeID == id && r.UserID == user.Id)
+                            .SingleAsync();
 
                         if (!(favoriteRecipe == null))
                         {
@@ -174,10 +172,15 @@ namespace projekt.Controllers
 
         public async Task<IActionResult> AddToFavorites(int id)
         {
+            WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
+            Recipe recipe = await _context.Recipes.Where(x => x.RecipeID == id).SingleAsync();
+
             FavoriteRecipe favoriteRecipe = new FavoriteRecipe()
             {
-                User = await _userManager.GetUserAsync(HttpContext.User),
-                Recipe = await _context.Recipes.Where(x => x.RecipeID == id).SingleAsync()
+                User = user,
+                UserID = user.Id,
+                Recipe = recipe,
+                RecipeID = id
             };
 
             _context.FavoriteRecipes.Add(favoriteRecipe);
@@ -186,18 +189,21 @@ namespace projekt.Controllers
             return RedirectToAction("Details", "Recipe", new { id = id });
         }
 
-        public async Task<IActionResult> RemoveFromFavorites(int id)
+        public async Task<IActionResult> RemoveFromFavorites(int id, int? recipeId, string userId = null)
         {
             FavoriteRecipe favoriteRecipe = await _context.FavoriteRecipes
-                .Include(r => r.Recipe)
                 .Where(r => r.FavoriteRecipeID == id).SingleAsync();
 
-            int returnId = favoriteRecipe.Recipe.RecipeID;
+            //returnId = favoriteRecipe.RecipeID;
 
             _context.FavoriteRecipes.Remove(favoriteRecipe);
             _context.SaveChanges();
 
-            return RedirectToAction("Details", "Recipe", new { id = returnId });
+            if (userId != null)
+            {
+                return RedirectToAction("Details", "Account", new { id = userId });
+            }
+            return RedirectToAction("Details", "Recipe", new { id = recipeId });
         }
     }
 }

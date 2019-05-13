@@ -47,7 +47,8 @@ else
         {
         <li>
             <p><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Recipe.RecipeID">@recipe.Recipe.Name</a></p>
-            <a asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@recipe.FavoriteRecipeID" class="btn btn-danger">usuń z ulubionych</a>
+            <a asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@recipe.FavoriteRecipeID" 
+                asp-route-userId="@Model.Id" class="btn btn-danger">usuń z ulubionych</a>
 
         </li>
         }

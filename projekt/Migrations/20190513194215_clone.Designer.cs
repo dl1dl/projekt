@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projekt.Data;
 
 namespace projekt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190513194215_clone")]
+    partial class clone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,15 +184,15 @@ namespace projekt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("RecipeID");
+                    b.Property<int?>("RecipeID");
 
-                    b.Property<string>("UserID");
+                    b.Property<string>("UserId");
 
                     b.HasKey("FavoriteRecipeID");
 
                     b.HasIndex("RecipeID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("FavoriteRecipes");
                 });
@@ -333,12 +335,11 @@ namespace projekt.Migrations
                 {
                     b.HasOne("projekt.Models.Recipe", "Recipe")
                         .WithMany("FavoriteRecipes")
-                        .HasForeignKey("RecipeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RecipeID");
 
                     b.HasOne("projekt.Models.WebAppUser", "User")
                         .WithMany("FavoriteRecipes")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("projekt.Models.Recipe", b =>
