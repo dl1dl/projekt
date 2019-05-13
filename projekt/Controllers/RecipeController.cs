@@ -140,11 +140,9 @@ namespace projekt.Controllers
 
             ViewBag.isAuthor = false;
             ViewBag.isInFavorites = false;
-            ViewBag.isLogged = false;
 
             if (_signInManager.IsSignedIn(HttpContext.User))
             {
-                ViewBag.isLogged = true;
                 WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
                 if (recipe.Author.Id == user.Id)
                 {
