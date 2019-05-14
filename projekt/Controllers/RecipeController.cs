@@ -54,7 +54,8 @@ namespace projekt.Controllers
                     Name = newRecipe.Name,
                     Body = newRecipe.Body,
                     Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync(),
-                    DifficultyLevel = await _context.DifficultyLevels.Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync()
+                    DifficultyLevel = await _context.DifficultyLevels
+                        .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync()
                 };
                 
                 _context.Recipes.Add(recipe);
@@ -144,7 +145,7 @@ namespace projekt.Controllers
             if (_signInManager.IsSignedIn(HttpContext.User))
             {
                 WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
-                if (recipe.Author.Id == user.Id)
+                if (recipe.Author != null && recipe.Author.Id == user.Id)
                 {
                     ViewBag.isAuthor = true;
                 }

@@ -10,8 +10,15 @@
     @await Component.InvokeAsync("FavoriteRecipes",
         new { recipeID = Model.RecipeID, favoriteRecipeID = ViewBag.favoriteRecipeID, isAuthor = ViewBag.isAuthor })
 
+    @if (Model.Author == null)
+    {
+        <p>autor: <i>profil skasowany</i></p>
+    }
+    else
+    {
+        <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a></p>
+    }
 
-    <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a></p>
     <p>kategoria: <a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
     <p>trudność wykonania: @Model.DifficultyLevel.Name</p>
     <p>@Model.Body</p>
@@ -23,7 +30,15 @@
     <h3>Komentarze:</h3>
     @foreach (var c in Model.Comments)
     {
-        <h6><a asp-controller="Account" asp-action="Details" asp-route-id="@c.Author.Id">@c.Author</a></h6>
+        @if (c.Author == null)
+        {
+            <h6><i>profil skasowany</i></h6>
+        }
+        else
+        {
+            <h6><a asp-controller="Account" asp-action="Details" asp-route-id="@c.Author.Id">@c.Author</a></h6>
+        }
+
         <p>@c.Body</p>
     }
 </div>

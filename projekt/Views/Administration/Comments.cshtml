@@ -24,7 +24,14 @@
         {
             <tr>
                 <td>@comment.CommentID</td>
-                <td><a asp-controller="Account" asp-action="Details" asp-route-id="@comment.Author.Id">@comment.Author</a></td>
+                @if  (comment.Author == null)
+                {
+                    <td><i>profil skasowany</i></td>
+                }
+                else
+                {
+                    <td><a asp-controller="Account" asp-action="Details" asp-route-id="@comment.Author.Id">@comment.Author</a></td>
+                }
                 <td><a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.Recipe.RecipeID">@comment.Recipe.Name</a></td>
                 <td>@comment.Body</td>
 

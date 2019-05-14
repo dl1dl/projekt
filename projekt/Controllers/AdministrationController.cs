@@ -61,7 +61,28 @@ namespace projekt.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            WebAppUser user = await _userManager.FindByIdAsync(id);
+            //WebAppUser user = await _userManager.FindByIdAsync(id);
+            WebAppUser user = await _context.Users
+                .Include(r => r.Recipes)
+                    .ThenInclude(a => a.Author)
+                .Include(c => c.Comments)
+                    .ThenInclude(a => a.Author)
+                .Include(f => f.FavoriteRecipes)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            foreach (Recipe recipe in user.Recipes)
+            {
+                recipe.Author = null;
+            }
+            foreach (Comment comment in user.Comments)
+            {
+                comment.Author = null;
+            }
+            foreach (FavoriteRecipe favoriteRecipe in user.FavoriteRecipes)
+            {
+                _context.FavoriteRecipes.Remove(favoriteRecipe);
+            }
+
             if (user != null)
             {
                 IdentityResult result = await _userManager.DeleteAsync(user);
@@ -161,13 +182,21 @@ namespace projekt.Controllers
         [HttpPost]
         public IActionResult DeleteRecipe(int id)
         {
-            Recipe recipe = _context.Recipes.FirstOrDefault(p => p.RecipeID == id);
+            Recipe recipe = _context.Recipes
+                .Include(r => r.Comments)
+                .FirstOrDefault(p => p.RecipeID == id);
+
+            foreach (Comment comment in recipe.Comments)
+            {
+                _context.Comments.Remove(comment);
+            }
+
             if (recipe != null)
             {
                 _context.Recipes.Remove(recipe);
                 _context.SaveChanges();
             }
-            //_recipeRepository.DeleteRecipe(recipe);
+
             return RedirectToAction("Recipes");
         }
     }

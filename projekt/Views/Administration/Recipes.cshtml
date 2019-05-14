@@ -31,9 +31,17 @@
             <tr>
                 <td>@recipe.RecipeID</td>
                 <td>@recipe.Name</td>
-                <td><a asp-controller="Account" asp-action="Details" asp-route-id="@recipe.Author.Id">@recipe.Author</a></td>
+                @if (recipe.Author == null)
+                {
+                    <td><p><i>profil skasowany</i></p></td>
+                }
+                else
+                {
+                    <td><a asp-controller="Account" asp-action="Details" asp-route-id="@recipe.Author.Id">@recipe.Author</a></td>
+                }
+                
                 <td><a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@recipe.Category.CategoryID">@recipe.Category.Name</a></td>
-                <td></td>
+                <td>@recipe.DifficultyLevel.Name</td>
 
                 <td>
                     <form asp-action="DeleteRecipe" asp-route-id="@recipe.RecipeID" method="post">
