@@ -154,7 +154,7 @@ namespace projekt.Controllers
                     {
                         FavoriteRecipe favoriteRecipe = await _context.FavoriteRecipes
                             .Where(r => r.RecipeID == id && r.UserID == user.Id)
-                            .SingleAsync();
+                            .FirstOrDefaultAsync();
 
                         if (!(favoriteRecipe == null))
                         {
