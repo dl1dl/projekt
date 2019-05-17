@@ -53,7 +53,7 @@ namespace projekt.Controllers
                 EditCommentVM commentToEdit = new EditCommentVM()
                 {
                     Body = comment.Body,
-                    Author = comment.Author != null ? comment.Author.Email : null,
+                    Author = comment.Author?.Email,
                     OriginalComment = comment.CommentID
                 };
 
