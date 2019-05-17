@@ -25,6 +25,14 @@
 </div>
 
 <div>
+    tagi: 
+    @foreach (var tag in Model.Taggings)
+    {
+        <h6>tag.TagName</h6>
+    }
+</div>
+
+<div>
     @await Component.InvokeAsync("AddComment", new { recipeID = Model.RecipeID })
 
     <h3>Komentarze:</h3>

@@ -18,6 +18,7 @@ namespace projekt.Models
         public DifficultyLevel DifficultyLevel { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<FavoriteRecipe> FavoriteRecipes { get; set; }
+        public ICollection<Tagging> Taggings { get; set; }
         
         public string Body { get; set; }
     }

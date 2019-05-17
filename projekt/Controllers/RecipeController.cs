@@ -136,6 +136,7 @@ namespace projekt.Controllers
                 .Include(r => r.Category)
                 .Include(r => r.DifficultyLevel)
                 .Include(r => r.Comments).ThenInclude(c => c.Author)
+                .Include(r => r.Taggings).ThenInclude(t => t.Tag)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
 
