@@ -9,5 +9,6 @@ namespace projekt.Models
     {
         public int TagID { get; set; }
         public string Name { get; set; }
+        public ICollection<Tagging> Taggings { get; set; }
     }
 }

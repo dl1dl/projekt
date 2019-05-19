@@ -57,9 +57,45 @@ namespace projekt.Controllers
                     DifficultyLevel = await _context.DifficultyLevels
                         .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync()
                 };
-                
+ 
                 _context.Recipes.Add(recipe);
                 _context.SaveChanges();
+
+                if (!string.IsNullOrEmpty(newRecipe.Tags))
+                {
+                    string[] tags = newRecipe.Tags.Split(null);
+                    foreach (string tag in tags)
+                    {
+                        Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag);
+                        Tagging tagging = new Tagging();
+
+                        if (existingTag != null)
+                        {
+                            tagging.RecipeID = recipe.RecipeID;
+                            tagging.Recipe = recipe;
+                            tagging.TagID = existingTag.TagID;
+                            tagging.TagName = existingTag.Name;
+                            tagging.Tag = existingTag;
+                        }
+                        else
+                        {
+                            Tag newTag = new Tag()
+                            {
+                                Name = tag
+                            };
+                            _context.Tags.Add(newTag);
+
+                            tagging.RecipeID = recipe.RecipeID;
+                            tagging.Recipe = recipe;
+                            tagging.TagID = newTag.TagID;
+                            tagging.TagName = newTag.Name;
+                            tagging.Tag = newTag; 
+                        }
+
+                        _context.Taggings.Add(tagging);
+                        _context.SaveChanges();
+                    }
+                }
 
                 return RedirectToAction("Index", "Home");
             }

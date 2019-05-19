@@ -14,5 +14,6 @@ namespace projekt.Models.ViewModels
         public int Category { get; set; }
         [Required]
         public int DifficultyLevel { get; set; }
+        public string Tags { get; set; }
     }
 }

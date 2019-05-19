@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projekt.Data;
 
 namespace projekt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190519202411_Tagging")]
+    partial class Tagging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,7 +253,8 @@ namespace projekt.Migrations
 
                     b.HasIndex("RecipeID");
 
-                    b.HasIndex("TagID");
+                    b.HasIndex("TagID")
+                        .IsUnique();
 
                     b.ToTable("Taggings");
                 });
@@ -400,8 +403,8 @@ namespace projekt.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("projekt.Models.Tag", "Tag")
-                        .WithMany("Taggings")
-                        .HasForeignKey("TagID")
+                        .WithOne("Tagging")
+                        .HasForeignKey("projekt.Models.Tagging", "TagID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
