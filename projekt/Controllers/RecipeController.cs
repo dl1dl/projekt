@@ -10,6 +10,7 @@ using projekt.Models.ViewModels;
 using projekt.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.RegularExpressions;
 
 namespace projekt.Controllers
 {
@@ -56,8 +57,8 @@ namespace projekt.Controllers
                     Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync(),
                     DifficultyLevel = await _context.DifficultyLevels
                         .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync(),
-                    Tags = String.Join(" ", newRecipe.Tags.Split(null))
-                };
+                    Tags = Regex.Replace(newRecipe.Tags, " {2,}", " ")
+            };
  
                 _context.Recipes.Add(recipe);
                 _context.SaveChanges();
@@ -151,11 +152,59 @@ namespace projekt.Controllers
                     originalRecipe.Name = recipe.Name;
                     originalRecipe.Body = recipe.Body;
                     originalRecipe.Category = await _context.Categories.Where(x => x.CategoryID == recipe.Category).SingleAsync();
-                    originalRecipe.DifficultyLevel = await _context.DifficultyLevels.Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
+                    originalRecipe.DifficultyLevel = await _context.DifficultyLevels
+                        .Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
 
-                    //ZAMIENIC NA ARRAYE I SPRAWDZIC CZY ELEMNTY SIE ROZNIA
+                    string[] originalTags = originalRecipe.Tags.Split(null);
+                    string[] newTags = recipe.Tags.Split(null);
 
-                    originalRecipe.Tags = recipe.Tags;
+                    foreach (string tag in newTags)
+                    {
+                        if (!originalTags.Contains(tag))
+                        {
+                            Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag);
+                            Tagging tagging = new Tagging();
+
+                            if (existingTag != null)
+                            {
+                                tagging.RecipeID = originalRecipe.RecipeID;
+                                tagging.Recipe = originalRecipe;
+                                tagging.TagID = existingTag.TagID;
+                                tagging.TagName = existingTag.Name;
+                                tagging.Tag = existingTag;
+                            }
+                            else
+                            {
+                                Tag newTag = new Tag()
+                                {
+                                    Name = tag
+                                };
+                                _context.Tags.Add(newTag);
+
+                                tagging.RecipeID = originalRecipe.RecipeID;
+                                tagging.Recipe = originalRecipe;
+                                tagging.TagID = newTag.TagID;
+                                tagging.TagName = newTag.Name;
+                                tagging.Tag = newTag;
+                            }
+
+                            _context.Taggings.Add(tagging);
+                            _context.SaveChanges();
+                        }
+                    }
+                    foreach (string tag in originalTags)
+                    {
+                        if (!newTags.Contains(tag))
+                        {
+                            Tagging taggingToDelete = await _context.Taggings
+                                .FirstOrDefaultAsync(t => t.Recipe == originalRecipe && t.TagName == tag);
+
+                            _context.Taggings.Remove(taggingToDelete);
+                            _context.SaveChanges();
+                        }
+                    }
+                    
+                    originalRecipe.Tags = Regex.Replace(recipe.Tags, " {2,}", " ");
 
                     _context.SaveChanges();
                     return RedirectToAction("Recipes", "Administration");
