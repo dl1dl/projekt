@@ -25,10 +25,10 @@
 </div>
 
 <div>
-    tagi: 
+    tagi:
     @foreach (var tag in Model.Taggings)
     {
-        <h6>@tag.TagName</h6>
+        <a asp-controller="Tag" asp-action="Index" asp-route-id="@tag.TagName">@tag.TagName</a>
     }
 </div>
 

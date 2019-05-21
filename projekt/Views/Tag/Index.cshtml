@@ -1,0 +1,15 @@
+﻿@model TagVM
+
+@{
+    string title = Model.TagName;
+    ViewData["Title"] = title;
+}
+
+<h2>Przepisy z tagiem @Model.TagName</h2>
+
+<ul>
+    @foreach (var r in Model.Recipes)
+    {
+        <li><a asp-controller="Recipe" asp-action="Details" asp-route-id="@r.RecipeID">@r.Name (@r.Category.Name)</a></li>
+    }
+</ul>
