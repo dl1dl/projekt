@@ -184,11 +184,17 @@ namespace projekt.Controllers
         {
             Recipe recipe = _context.Recipes
                 .Include(r => r.Comments)
+                .Include(r => r.Taggings)
                 .FirstOrDefault(p => p.RecipeID == id);
 
             foreach (Comment comment in recipe.Comments)
             {
                 _context.Comments.Remove(comment);
+            }
+
+            foreach (Tagging tagging in recipe.Taggings)
+            {
+                _context.Taggings.Remove(tagging);
             }
 
             if (recipe != null)

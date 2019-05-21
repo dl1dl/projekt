@@ -55,15 +55,16 @@ namespace projekt.Controllers
                     Body = newRecipe.Body,
                     Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync(),
                     DifficultyLevel = await _context.DifficultyLevels
-                        .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync()
+                        .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync(),
+                    Tags = String.Join(" ", newRecipe.Tags.Split(null))
                 };
  
                 _context.Recipes.Add(recipe);
                 _context.SaveChanges();
 
-                if (!string.IsNullOrEmpty(newRecipe.Tags))
+                if (!string.IsNullOrEmpty(recipe.Tags))
                 {
-                    string[] tags = newRecipe.Tags.Split(null);
+                    string[] tags = recipe.Tags.Split(null);
                     foreach (string tag in tags)
                     {
                         Tag existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag);
@@ -124,6 +125,7 @@ namespace projekt.Controllers
                     Body = recipe.Body,
                     Category = recipe.Category.CategoryID,
                     DifficultyLevel = recipe.DifficultyLevel.DifficultyLevelID,
+                    Tags = recipe.Tags,
                     OriginalRecipe = id
                 };
 
@@ -150,6 +152,11 @@ namespace projekt.Controllers
                     originalRecipe.Body = recipe.Body;
                     originalRecipe.Category = await _context.Categories.Where(x => x.CategoryID == recipe.Category).SingleAsync();
                     originalRecipe.DifficultyLevel = await _context.DifficultyLevels.Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
+
+                    //ZAMIENIC NA ARRAYE I SPRAWDZIC CZY ELEMNTY SIE ROZNIA
+
+                    originalRecipe.Tags = recipe.Tags;
+
                     _context.SaveChanges();
                     return RedirectToAction("Recipes", "Administration");
                 }

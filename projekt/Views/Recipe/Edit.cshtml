@@ -26,6 +26,10 @@
         <label asp-for="Category" class="control-label">Kategoria</label>
         <select asp-for="Category" class="form-control" asp-items="ViewBag.Categories"></select>
     </div>
+    <div class="form-group">
+        <label asp-for="Tags" class="control-label">Tagi</label>
+        <textarea asp-for="Tags" class="form-control"></textarea>
+    </div>
 
     <button class="btn btn-success">Zapisz zmiany</button>
     <a class="btn btn-danger" asp-controller="Administration" asp-action="Recipes">Anuluj</a>
