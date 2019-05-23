@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projekt.Data;
 
 namespace projekt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190523194802_Steps2")]
+    partial class Steps2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,7 +415,7 @@ namespace projekt.Migrations
 
             modelBuilder.Entity("projekt.Models.Step", b =>
                 {
-                    b.HasOne("projekt.Models.Recipe", "Recipe")
+                    b.HasOne("projekt.Models.Recipe")
                         .WithMany("Steps")
                         .HasForeignKey("RecipeID");
                 });

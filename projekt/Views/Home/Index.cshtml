@@ -19,7 +19,7 @@ else
 {
     <div>
         <h2><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></h2>
-        <p>@recipe.Body</p>
+        <p>@recipe.Description</p>
         <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID" class="btn btn-primary">Zobacz więcej</a>
     </div>
     <br />

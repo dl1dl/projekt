@@ -21,14 +21,24 @@
 
     <p>kategoria: <a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
     <p>trudność wykonania: @Model.DifficultyLevel.Name</p>
-    <p>@Model.Body</p>
+    <p>Opis przepisu: <br />@Model.Description</p>
+</div>
+
+<div>
+    <h4>Instrukcja wykonania</h4>
+    <ol>
+    @foreach (var step in Model.Steps)
+    {
+        <li>@step.Description</li>
+    }
+    </ol>
 </div>
 
 <div>
     tagi:
     @foreach (var tag in Model.Taggings)
     {
-        <a asp-controller="Tag" asp-action="Index" asp-route-id="@tag.TagName">@tag.TagName</a>
+        <a asp-controller="Tag" asp-action="Index" class="btn btn-default" asp-route-id="@tag.TagName">@tag.TagName</a>
     }
 </div>
 

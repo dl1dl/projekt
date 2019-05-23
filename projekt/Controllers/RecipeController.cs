@@ -41,7 +41,9 @@ namespace projekt.Controllers
             var dLevels = from d in _context.DifficultyLevels orderby d.Name select d;
             ViewBag.DifficultyLevels = new SelectList(dLevels.AsNoTracking(), "DifficultyLevelID", "Name", null);
 
-            return View();
+            NewRecipeVM newRecipe = new NewRecipeVM() { };
+
+            return View(newRecipe);
         }
 
         [HttpPost]
@@ -53,7 +55,7 @@ namespace projekt.Controllers
                 {
                     Author = await _userManager.GetUserAsync(HttpContext.User),
                     Name = newRecipe.Name,
-                    Body = newRecipe.Body,
+                    Description = newRecipe.Description,
                     Category = await _context.Categories.Where(x => x.CategoryID == newRecipe.Category).SingleAsync(),
                     DifficultyLevel = await _context.DifficultyLevels
                         .Where(x => x.DifficultyLevelID == newRecipe.DifficultyLevel).SingleAsync(),
@@ -62,6 +64,18 @@ namespace projekt.Controllers
  
                 _context.Recipes.Add(recipe);
                 _context.SaveChanges();
+
+                foreach (var step in newRecipe.Steps)
+                {
+                    Step newStep = new Step()
+                    {
+                        Description = step.Description,
+                        Recipe = recipe
+                    };
+
+                    _context.Steps.Add(newStep);
+                    _context.SaveChanges();
+                }
 
                 if (!string.IsNullOrEmpty(recipe.Tags))
                 {
@@ -116,6 +130,7 @@ namespace projekt.Controllers
             Recipe recipe = _context.Recipes
                 .Include(x => x.Category)
                 .Include(x => x.DifficultyLevel)
+                .Include(x => x.Steps)
                 .FirstOrDefault(p => p.RecipeID == id);
 
             if (recipe != null)
@@ -123,7 +138,7 @@ namespace projekt.Controllers
                 EditRecipeVM recipeToEdit = new EditRecipeVM()
                 {
                     Name = recipe.Name,
-                    Body = recipe.Body,
+                    Description = recipe.Description,
                     Category = recipe.Category.CategoryID,
                     DifficultyLevel = recipe.DifficultyLevel.DifficultyLevelID,
                     Tags = recipe.Tags,
@@ -150,7 +165,7 @@ namespace projekt.Controllers
                 if (originalRecipe != null)
                 {
                     originalRecipe.Name = recipe.Name;
-                    originalRecipe.Body = recipe.Body;
+                    originalRecipe.Description = recipe.Description;
                     originalRecipe.Category = await _context.Categories.Where(x => x.CategoryID == recipe.Category).SingleAsync();
                     originalRecipe.DifficultyLevel = await _context.DifficultyLevels
                         .Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
@@ -229,6 +244,7 @@ namespace projekt.Controllers
                 .Include(r => r.DifficultyLevel)
                 .Include(r => r.Comments).ThenInclude(c => c.Author)
                 .Include(r => r.Taggings).ThenInclude(t => t.Tag)
+                .Include(r => r.Steps)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
 

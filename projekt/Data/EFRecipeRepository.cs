@@ -30,7 +30,7 @@ namespace projekt.Data
             if (originalRecipe != null)
             {
                 originalRecipe.Name = recipe.Name;
-                originalRecipe.Body = recipe.Body;
+                originalRecipe.Description = recipe.Description;
             }
             _context.SaveChanges();
         }

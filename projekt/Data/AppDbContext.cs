@@ -23,6 +23,7 @@ namespace projekt.Data
         public DbSet<FavoriteRecipe> FavoriteRecipes { get; set; }
         public DbSet<Tagging> Taggings { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Step> Steps { get; set; }
 
         public static async Task AddAdminWithRole(IServiceProvider serviceProvider, IConfiguration configuration)
         {

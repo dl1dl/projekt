@@ -21,6 +21,7 @@ namespace projekt.Models
         public string Tags { get; set; }
         public ICollection<Tagging> Taggings { get; set; }
 
-        public string Body { get; set; }
+        public string Description { get; set; }
+        public ICollection<Step> Steps { get; set; }
     }
 }
