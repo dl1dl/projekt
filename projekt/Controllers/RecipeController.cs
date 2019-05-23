@@ -65,6 +65,18 @@ namespace projekt.Controllers
                 _context.Recipes.Add(recipe);
                 _context.SaveChanges();
 
+                foreach (var ingredient in newRecipe.Ingredients)
+                {
+                    Ingredient newIngredient = new Ingredient()
+                    {
+                        Name = ingredient.Name,
+                        Recipe = recipe
+                    };
+
+                    _context.Ingredients.Add(newIngredient);
+                    _context.SaveChanges();
+                }
+
                 foreach (var step in newRecipe.Steps)
                 {
                     Step newStep = new Step()
@@ -244,6 +256,7 @@ namespace projekt.Controllers
                 .Include(r => r.DifficultyLevel)
                 .Include(r => r.Comments).ThenInclude(c => c.Author)
                 .Include(r => r.Taggings).ThenInclude(t => t.Tag)
+                .Include(r => r.Ingredients)
                 .Include(r => r.Steps)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RecipeID == id);

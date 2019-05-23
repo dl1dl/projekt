@@ -25,12 +25,22 @@
 </div>
 
 <div>
+    <h4>Lista składników</h4>
+    <ul>
+        @foreach (var ingredient in Model.Ingredients)
+        {
+            <li>@ingredient.Name</li>
+        }
+    </ul>
+</div>
+
+<div>
     <h4>Instrukcja wykonania</h4>
-    <ol>
-    @foreach (var step in Model.Steps)
-    {
-        <li>@step.Description</li>
-    }
+        <ol>
+        @foreach (var step in Model.Steps)
+        {
+            <li>@step.Description</li>
+        }
     </ol>
 </div>
 

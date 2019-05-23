@@ -185,6 +185,8 @@ namespace projekt.Controllers
             Recipe recipe = _context.Recipes
                 .Include(r => r.Comments)
                 .Include(r => r.Taggings)
+                .Include(r => r.Ingredients)
+                .Include(r => r.Steps)
                 .FirstOrDefault(p => p.RecipeID == id);
 
             foreach (Comment comment in recipe.Comments)
@@ -195,6 +197,16 @@ namespace projekt.Controllers
             foreach (Tagging tagging in recipe.Taggings)
             {
                 _context.Taggings.Remove(tagging);
+            }
+
+            foreach (Ingredient ingredient in recipe.Ingredients)
+            {
+                _context.Ingredients.Remove(ingredient);
+            }
+
+            foreach (Step step in recipe.Steps)
+            {
+                _context.Steps.Remove(step);
             }
 
             if (recipe != null)

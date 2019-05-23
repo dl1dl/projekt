@@ -22,12 +22,17 @@
         <textarea asp-for="Description" class="form-control"></textarea>
     </div>
 
+    <div class="form-group" id="ingredient-list">
+        <label asp-for="Ingredients">Lista składników</label>
+        <input asp-for="Ingredients[0].Name" class="ingredients form-control" />
+    </div>
+    <a href="#" id="add-ingredient" class="btn btn-info">Dodaj kolejny składnik</a>
+
     <div class="form-group" id="step-list">
         <label asp-for="Steps">Instrukcja wykonania</label>
-        <input asp-for="Steps[0].Description" class="steps form-control" /> <br />
-
+        <input asp-for="Steps[0].Description" class="steps form-control" />
     </div>
-    <a href="#" id="add" class="btn btn-info">Dodaj kolejny krok</a>
+    <a href="#" id="add-step" class="btn btn-info">Dodaj kolejny krok</a>
 
     <div class="form-group">
         <label asp-for="DifficultyLevel" class="control-label">Poziom trudności wykonania:</label>
@@ -45,7 +50,17 @@
 @section Scripts  {
     <script type="text/javascript">
         $(function () {
-            $("#add").click(function (e) {
+            $("#add-ingredient").click(function (f) {
+                f.preventDefault();
+                var j = $(".ingredients").length;
+                var m = '<input class="ingredients form-control" type="text" name="Ingredients[' + j + '].Name" /> <br />';
+                $("#ingredient-list").append(m);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#add-step").click(function (e) {
                 e.preventDefault();
                 var i = $(".steps").length;
                 var n = '<input class="steps form-control" type="text" name="Steps[' + i + '].Description" /> <br />';

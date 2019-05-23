@@ -24,6 +24,7 @@ namespace projekt.Data
         public DbSet<Tagging> Taggings { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Step> Steps { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         public static async Task AddAdminWithRole(IServiceProvider serviceProvider, IConfiguration configuration)
         {

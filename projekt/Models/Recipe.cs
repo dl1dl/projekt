@@ -23,5 +23,6 @@ namespace projekt.Models
 
         public string Description { get; set; }
         public ICollection<Step> Steps { get; set; }
+        public ICollection<Ingredient> Ingredients { get; set; }
     }
 }
