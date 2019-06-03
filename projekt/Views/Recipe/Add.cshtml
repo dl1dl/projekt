@@ -53,17 +53,16 @@
             $("#add-ingredient").click(function (f) {
                 f.preventDefault();
                 var j = $(".ingredients").length;
-                var m = '<input class="ingredients form-control" type="text" name="Ingredients[' + j + '].Name" /> <br />';
+                var m = '<input class="ingredients form-control" type="text" name="Ingredients[' + j + '].Name" />';
                 $("#ingredient-list").append(m);
             });
         });
-    </script>
-    <script type="text/javascript">
+
         $(function () {
             $("#add-step").click(function (e) {
                 e.preventDefault();
                 var i = $(".steps").length;
-                var n = '<input class="steps form-control" type="text" name="Steps[' + i + '].Description" /> <br />';
+                var n = '<input class="steps form-control" type="text" name="Steps[' + i + '].Description" />';
                 $("#step-list").append(n);
             });
         });

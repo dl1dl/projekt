@@ -26,7 +26,7 @@ namespace projekt.Controllers
             _signInManager = sim;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             if (_signInManager.IsSignedIn(HttpContext.User))
             {
@@ -37,12 +37,21 @@ namespace projekt.Controllers
                 ViewBag.IsLogged = false;
             }
 
-            return View(new PrintVM
+            var recipes = from r in _context.Recipes select r;
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                Recipes = _context.Recipes,
+                recipes = recipes.Where(r => r.Name.Contains(searchString) || r.Description.Contains(searchString));
+            }
+
+            IndexVM IndexVM = new IndexVM
+            {
+                Recipes = recipes,
                 Categories = _context.Categories,
                 DiffLevels = _context.DifficultyLevels
-            });
+            };
+
+            return View(IndexVM);
         }
 
         public async Task<ViewResult> Details(int id)

@@ -22,6 +22,26 @@
         <label asp-for="Description">Treść:</label>
         <textarea asp-for="Description" class="form-control"></textarea>
     </div>
+    <div class="form-group" id="ingredient-list">
+        <label asp-for="Ingredients">Lista składników</label>
+        @for (int i = 0; i < Model.Ingredients.Count(); i++)
+        {
+            <input asp-for="Ingredients[i].Name" class="ingredients form-control" id="ingredient-@i" />
+        }
+    </div>
+    <a href="#" id="add-ingredient" class="btn btn-info" onclick="addIngredient()">Dodaj kolejny składnik</a>
+    <a href="#" id="remove-ingredient" class="btn btn-danger">Usuń ostatni składnik</a>
+
+    <div class="form-group" id="step-list">
+        <label asp-for="Steps">Instrukcja wykonania</label>
+        @for (int i = 0; i < Model.Steps.Count(); i++)
+        {
+            <input asp-for="Steps[i].Description" class="steps form-control" id="step-@i" />
+        }
+    </div>
+    <a href="#" id="add-step" class="btn btn-info">Dodaj kolejny krok</a>
+    <a href="#" id="remove-step" class="btn btn-danger">Usuń ostatni krok</a>
+
     <div class="form-group">
         <label asp-for="Category" class="control-label">Kategoria</label>
         <select asp-for="Category" class="form-control" asp-items="ViewBag.Categories"></select>
@@ -35,3 +55,24 @@
     <a class="btn btn-danger" asp-controller="Administration" asp-action="Recipes">Anuluj</a>
 </form>
 
+@section Scripts  {
+    <script type="text/javascript">
+        $(function () {
+            $("#add-ingredient").click(function (f) {
+                f.preventDefault();
+                var j = $(".ingredients").length;
+                var m = '<input class="ingredients form-control" id="ingredient-' + j +'" type="text" name="Ingredients[' + j + '].Name" />';
+                $("#ingredient-list").append(m);
+            });
+        });
+
+        $(function () {
+            $("#add-step").click(function (e) {
+                e.preventDefault();
+                var i = $(".steps").length;
+                var n = '<input class="steps form-control" type="text" name="Steps[' + i + '].Description" /> <br />';
+                $("#step-list").append(n);
+            });
+        });    
+    </script>
+}

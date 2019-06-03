@@ -1,8 +1,15 @@
-﻿@model PrintVM
+﻿@model IndexVM
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
+
+<form asp-controller="Home" asp-action="Index" method="get">
+    <p style="margin-top:5px">
+        Szukaj przepisu: <input type="text" name="SearchString">
+        <input class="btn" type="submit" />
+    </p>
+</form>
 
 @if (ViewBag.IsLogged)
 {

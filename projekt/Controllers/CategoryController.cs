@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
+using projekt.Models.ViewModels;
 
 namespace projekt.Controllers
 {
@@ -26,15 +27,27 @@ namespace projekt.Controllers
             return View(await categories.ToListAsync());
         }
 
-        public async Task<IActionResult> AllRecipes(int id)
+        public async Task<IActionResult> AllRecipes(int id, string searchString)
         {
-
             Category category = await _context.Categories
-                .Include(c => c.Recipes)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
 
-            return View(category);
+            var recipes = from r in _context.Recipes select r;
+            recipes = recipes.Where(r => r.Category.CategoryID == id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recipes = recipes.Where(r => r.Name.Contains(searchString) || r.Description.Contains(searchString));
+            }
+
+            IndexVM IndexVM = new IndexVM
+            {
+                Recipes = recipes,
+                Category = category
+            };
+
+            return View(IndexVM);
         }
     }
 }

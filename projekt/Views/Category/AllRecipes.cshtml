@@ -1,14 +1,25 @@
-﻿@model Category
+﻿@model IndexVM
 
 @{
     ViewData["Title"] = "Wszystkie przepisy w tej kategorii";
 }
 
-<h2>Przepisy w kategorii @Model.Name</h2>
+<h2>Przepisy w kategorii @Model.Category.Name</h2>
+
+<form asp-controller="Category" asp-action="AllRecipes" asp-route-it="@Model.Category.CategoryID" method="get">
+    <p style="margin-top:5px">
+        Szukaj przepisu: <input type="text" name="SearchString">
+        <input class="btn" type="submit" />
+    </p>
+</form>
 
 <ul>
-@foreach (var r in Model.Recipes)
+@foreach (var recipe in Model.Recipes)
 {
-    <li><a asp-controller="Recipe" asp-action="Details" asp-route-id="@r.RecipeID">@r.Name</a></li>
+    <li>
+        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a>
+        <p>@recipe.Description</p>
+    </li>
+        
 }
 </ul>

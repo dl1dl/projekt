@@ -67,26 +67,32 @@ namespace projekt.Controllers
 
                 foreach (var ingredient in newRecipe.Ingredients)
                 {
-                    Ingredient newIngredient = new Ingredient()
-                    {
-                        Name = ingredient.Name,
-                        Recipe = recipe
-                    };
+                    if (!String.IsNullOrWhiteSpace(ingredient.Name))
+                    { 
+                        Ingredient newIngredient = new Ingredient()
+                        {
+                            Name = ingredient.Name,
+                            Recipe = recipe
+                        };
 
-                    _context.Ingredients.Add(newIngredient);
-                    _context.SaveChanges();
+                        _context.Ingredients.Add(newIngredient);
+                        _context.SaveChanges();
+                    }
                 }
 
                 foreach (var step in newRecipe.Steps)
                 {
-                    Step newStep = new Step()
+                    if (!String.IsNullOrWhiteSpace(step.Description))
                     {
-                        Description = step.Description,
-                        Recipe = recipe
-                    };
+                        Step newStep = new Step()
+                        {
+                            Description = step.Description,
+                            Recipe = recipe
+                        };
 
-                    _context.Steps.Add(newStep);
-                    _context.SaveChanges();
+                        _context.Steps.Add(newStep);
+                        _context.SaveChanges();
+                    } 
                 }
 
                 if (!string.IsNullOrEmpty(recipe.Tags))
@@ -137,13 +143,14 @@ namespace projekt.Controllers
             return View(newRecipe);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            Recipe recipe = _context.Recipes
+            Recipe recipe = await _context.Recipes
                 .Include(x => x.Category)
                 .Include(x => x.DifficultyLevel)
                 .Include(x => x.Steps)
-                .FirstOrDefault(p => p.RecipeID == id);
+                .Include(x => x.Ingredients)
+                .FirstOrDefaultAsync(p => p.RecipeID == id);
 
             if (recipe != null)
             {
@@ -154,7 +161,9 @@ namespace projekt.Controllers
                     Category = recipe.Category.CategoryID,
                     DifficultyLevel = recipe.DifficultyLevel.DifficultyLevelID,
                     Tags = recipe.Tags,
-                    OriginalRecipe = id
+                    OriginalRecipe = id,
+                    Steps = recipe.Steps.ToList<Step>(),
+                    Ingredients = recipe.Ingredients.ToList<Ingredient>()
                 };
 
                 var categories = from c in _context.Categories orderby c.Name select c;
@@ -173,7 +182,13 @@ namespace projekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                Recipe originalRecipe = await _context.Recipes.FirstOrDefaultAsync(p => p.RecipeID == recipe.OriginalRecipe);
+                Recipe originalRecipe = await _context.Recipes
+                    .Include(x => x.Category)
+                    .Include(x => x.DifficultyLevel)
+                    .Include(x => x.Steps)
+                    .Include(x => x.Ingredients)
+                    .FirstOrDefaultAsync(p => p.RecipeID == recipe.OriginalRecipe);
+
                 if (originalRecipe != null)
                 {
                     originalRecipe.Name = recipe.Name;
@@ -181,6 +196,46 @@ namespace projekt.Controllers
                     originalRecipe.Category = await _context.Categories.Where(x => x.CategoryID == recipe.Category).SingleAsync();
                     originalRecipe.DifficultyLevel = await _context.DifficultyLevels
                         .Where(x => x.DifficultyLevelID == recipe.DifficultyLevel).SingleAsync();
+
+                    foreach (Ingredient ingredient in originalRecipe.Ingredients)
+                    {
+                        _context.Ingredients.Remove(ingredient);
+                    }
+
+                    foreach (Ingredient ingredient in recipe.Ingredients)
+                    {
+                        if (!String.IsNullOrWhiteSpace(ingredient.Name))
+                        {
+                            Ingredient newIngredient = new Ingredient()
+                            {
+                                Name = ingredient.Name,
+                                Recipe = originalRecipe
+                            };
+
+                            _context.Ingredients.Add(newIngredient);
+                            _context.SaveChanges();
+                        }
+                    }
+
+                    foreach (Step step in originalRecipe.Steps)
+                    {
+                        _context.Steps.Remove(step);
+                    }
+
+                    foreach (Step step in recipe.Steps)
+                    {
+                        if (!String.IsNullOrWhiteSpace(step.Description))
+                        {
+                            Step newStep = new Step()
+                            {
+                                Description = step.Description,
+                                Recipe = originalRecipe
+                            };
+
+                            _context.Steps.Add(newStep);
+                            _context.SaveChanges();
+                        }
+                    }
 
                     string[] originalTags = originalRecipe.Tags.Split(null);
                     string[] newTags = recipe.Tags.Split(null);
