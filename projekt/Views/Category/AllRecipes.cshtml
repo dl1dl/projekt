@@ -6,13 +6,6 @@
 
 <h2>Przepisy w kategorii @Model.Category.Name</h2>
 
-<form asp-controller="Category" asp-action="AllRecipes" asp-route-it="@Model.Category.CategoryID" method="get">
-    <p style="margin-top:5px">
-        Szukaj przepisu: <input type="text" name="SearchString">
-        <input class="btn" type="submit" />
-    </p>
-</form>
-
 <ul>
 @foreach (var recipe in Model.Recipes)
 {

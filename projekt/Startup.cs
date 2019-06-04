@@ -85,6 +85,56 @@ namespace projekt
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "no-category",
+                    template: "/",
+                    defaults: new { controller = "Home", action = "Index", id = "0" });
+
+                routes.MapRoute(
+                    name: "category-danie-glowne",
+                    template: "Kategoria/Danie-glowne",
+                    defaults: new { controller = "Home", action = "Index", id = "6" });
+
+                routes.MapRoute(
+                    name: "category-zupa",
+                    template: "Kategoria/Zupa",
+                    defaults: new { controller = "Home", action = "Index", id = "7" });
+
+               routes.MapRoute(
+                    name: "category-deser",
+                    template: "Kategoria/Deser",
+                    defaults: new { controller = "Home", action = "Index", id = "8" });
+
+                routes.MapRoute(
+                    name: "category-sniadanie",
+                    template: "Kategoria/Sniadanie",
+                    defaults: new { controller = "Home", action = "Index", id = "9" });
+
+                routes.MapRoute(
+                    name: "category-salatka",
+                    template: "Kategoria/Salatka",
+                    defaults: new { controller = "Home", action = "Index", id = "10" });
+
+                routes.MapRoute(
+                    name: "category",
+                    template: "Kategoria/{id?}",
+                    defaults: new { controller = "Category", action = "AllRecipes" });
+
+                routes.MapRoute(
+                    name: "tag",
+                    template: "Tag/{id?}",
+                    defaults: new { controller = "Tag", action = "Index" });
+
+                routes.MapRoute(
+                    name: "recipe-details",
+                    template: "Przepis/{id?}",
+                    defaults: new { controller = "Recipe", action = "Details" });
+
+                routes.MapRoute(
+                    name: "author-details",
+                    template: "Autor/{id?}",
+                    defaults: new { controller = "Account", action = "Details" });
+
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });

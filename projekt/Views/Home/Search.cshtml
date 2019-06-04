@@ -1,0 +1,27 @@
+﻿@model SearchVM
+
+@{
+    ViewData["Title"] = "Wyszukiwanie przepisów";
+}
+
+<h2>Szukaj</h2>
+
+<form asp-action="Results" asp-controller="Home">
+    <div class="form-group">
+        <label asp-for="SearchString">Szukaj w nazwie, opisie lub liście składników</label>
+        <input asp-for="SearchString" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Tags">Szukaj przepisów z tagami</label>
+        <input asp-for="Tags" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Category" class="control-label">Szukaj w kategorii</label>
+        <select asp-for="Category" class="form-control" asp-items="ViewBag.Categories"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="DifficultyLevel" class="control-label">Szukaj przepisów o wybranym poziomie trudności</label>
+        <select asp-for="DifficultyLevel" class="form-control" asp-items="ViewBag.DifficultyLevels"></select>
+    </div>
+    <button type="submit" class="btn btn-success">Szukaj</button>
+</form>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using projekt.Data;
 using projekt.Models;
@@ -25,8 +27,8 @@ namespace projekt.Controllers
             _userManager = umn;
             _signInManager = sim;
         }
-
-        public async Task<IActionResult> Index(string searchString)
+        
+        public async Task<IActionResult> Index(int id, string searchString)
         {
             if (_signInManager.IsSignedIn(HttpContext.User))
             {
@@ -37,18 +39,106 @@ namespace projekt.Controllers
                 ViewBag.IsLogged = false;
             }
 
-            var recipes = from r in _context.Recipes select r;
+            List<Recipe> recipes = new List<Recipe>();
+            Category category = await _context.Categories.Where(x => x.CategoryID == id).FirstOrDefaultAsync();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrWhiteSpace(searchString))
             {
-                recipes = recipes.Where(r => r.Name.Contains(searchString) || r.Description.Contains(searchString));
+                var recipesFromContext = _context.Recipes.Include(i => i.Ingredients).Include(c => c.Category);
+                var recipesWithIngredient = _context.Ingredients.Include(r => r.Recipe);
+                List<Recipe> recipesToRemove = new List<Recipe>();
+
+                searchString = Regex.Replace(searchString, " {2,}", " ");
+                string[] searchArray = searchString.Split(null);
+
+                List<String> tagsToAdd = searchArray.Where(x => x[0] == '#').ToList();
+                for (int i = 0; i < tagsToAdd.Count(); i++)
+                {
+                    tagsToAdd[i] = tagsToAdd[i].Substring(1);
+                }
+
+                List<String> tagsToRemove = searchArray.Where(x => x[0] == '-').ToList();
+                for (int i = 0; i < tagsToRemove.Count(); i++)
+                {
+                    tagsToRemove[i] = tagsToRemove[i].Substring(1);
+                }
+
+                List<String> words = searchArray.Where(x => x[0] != '#' && x[0] != '-').ToList();
+
+                ViewBag.tagsToAdd = tagsToAdd;
+                ViewBag.tagsToRemove = tagsToRemove;
+                ViewBag.words = words;
+                ViewBag.id = id;
+
+                if (tagsToAdd.Count() > 0)
+                {
+                    foreach (var tag in tagsToAdd)
+                    {
+                        recipes.AddRange(recipesFromContext.Where(x => x.Tags.Contains(tag)));
+                    }
+                }
+                else
+                {
+                    recipes = recipesFromContext.ToList();
+                }
+                
+                foreach (var word in words)
+                {
+                    if (recipesToRemove.Count() == 0)
+                    {
+                        recipesToRemove.AddRange(recipes.Where(x => !x.Name.Contains(word) && !x.Description.ToLower().Contains(word) 
+                            && (x.Ingredients.Where(z => z.Name.ToLower().Contains(word)).Count() == 0) ).ToList());
+                    }
+                    else
+                    {
+                        List<Recipe> newRecipesToRemove = recipes.Where(x => !x.Name.Contains(word) && !x.Description.ToLower().Contains(word)
+                            && (x.Ingredients.Where(z => z.Name.ToLower().Contains(word)).Count() == 0) ).ToList();
+
+                        if (newRecipesToRemove.Count() > 0)
+                        {
+                            List<Recipe> oldRecipesToRemove = new List<Recipe>();
+                            oldRecipesToRemove.AddRange(recipesToRemove);
+
+                            recipesToRemove = newRecipesToRemove.Intersect(oldRecipesToRemove).ToList();
+                        }
+                    }
+                }
+
+                if (recipesToRemove.Count() > 0)
+                {
+                    foreach (var recipeToRemove in recipesToRemove)
+                    {
+                        recipes.Remove(recipeToRemove);
+                    }
+                }
+
+                foreach (var tag in tagsToRemove)
+                {
+                    recipes.RemoveAll(x => x.Tags.Contains(tag));
+                }
+            }
+            else
+            {
+                recipes = await _context.Recipes.ToListAsync();
+            }
+            
+            if (id != 0)
+            {
+                List<Recipe> recipesInCategory = new List<Recipe>();
+                foreach (var recipe in recipes)
+                {
+                    if (recipe.Category == category)
+                    {
+                        recipesInCategory.Add(recipe);
+                    }
+                }
+                recipes = recipesInCategory;
             }
 
             IndexVM IndexVM = new IndexVM
             {
-                Recipes = recipes,
-                Categories = _context.Categories,
-                DiffLevels = _context.DifficultyLevels
+                Recipes = recipes.Distinct().ToList(),
+                CategoryID = id
             };
 
             return View(IndexVM);

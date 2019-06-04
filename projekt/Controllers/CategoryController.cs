@@ -27,19 +27,13 @@ namespace projekt.Controllers
             return View(await categories.ToListAsync());
         }
 
-        public async Task<IActionResult> AllRecipes(int id, string searchString)
+        public async Task<IActionResult> AllRecipes(int id)
         {
             Category category = await _context.Categories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
 
-            var recipes = from r in _context.Recipes select r;
-            recipes = recipes.Where(r => r.Category.CategoryID == id);
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                recipes = recipes.Where(r => r.Name.Contains(searchString) || r.Description.Contains(searchString));
-            }
+            List<Recipe> recipes = _context.Recipes.Where(r => r.Category.CategoryID == id).ToList();
 
             IndexVM IndexVM = new IndexVM
             {

@@ -1,26 +1,59 @@
 ﻿@model IndexVM
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "projekt";
 }
 
-<form asp-controller="Home" asp-action="Index" method="get">
+ViewBag.tagsToAdd
+@if (ViewBag.tagsToAdd != null)
+{
+    @foreach (var tag in ViewBag.tagsToAdd)
+    {
+        @tag 
+    }
+}
+<br />
+ViewBag.tagsToRemove
+@if (ViewBag.tagsToRemove != null)
+{
+    @foreach (var tag in ViewBag.tagsToRemove)
+    {
+        @tag 
+    }
+}
+<br />
+ViewBag.words
+@if (ViewBag.words != null)
+{
+    @foreach (var tag in ViewBag.words)
+    {
+        <p>@tag</p>
+    }
+}
+<br />
+
+id=@ViewBag.id
+
+<form asp-controller="Home" asp-action="Index" method="get" id="search-box" asp-route-id="@Model.CategoryID">
+    <h6>użyj #tag, by wyszukać przepisy z danym tagiem, -tag by przepisy z tym tagiem wykluczyć</h6>
     <p style="margin-top:5px">
         Szukaj przepisu: <input type="text" name="SearchString">
         <input class="btn" type="submit" />
     </p>
+    <!--<a asp-controller="Home" asp-action="Search">Wyszukiwanie szczegółowe</a>-->
 </form>
 
-@if (ViewBag.IsLogged)
-{
-    <a asp-controller="Recipe" asp-action="Add" class="btn btn-success">Dodaj przepis</a>
-}
-else
-{
-    <p>Zaloguj się aby dodać przepis</p>
-}
 
-<h4>przepisy:</h4>
+<div style="float:right">
+    @if (ViewBag.IsLogged)
+    {
+        <a asp-controller="Recipe" asp-action="Add" class="btn btn-success">Dodaj przepis</a>
+    }
+    else
+    {
+        <p>Zaloguj się aby dodać przepis</p>
+    }
+</div>
 
 @foreach (var recipe in Model.Recipes)
 {
@@ -31,23 +64,4 @@ else
     </div>
     <br />
     <hr />
-}
-
-<h4>kategorie:</h4>
-
-<ul>
-    @foreach (var category in Model.Categories)
-    {
-        <li><a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@category.CategoryID">@category.Name</a></li>
-    }
-</ul>
-
-<hr />
-<h4>pozoimy trudności:</h4>
-
-@foreach (var difflevel in Model.DiffLevels)
-{
-    <div>
-        <h3>@difflevel.Name</h3>
-    </div>
 }

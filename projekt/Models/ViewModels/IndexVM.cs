@@ -7,10 +7,12 @@ namespace projekt.Models.ViewModels
 {
     public class IndexVM
     {
-        public IQueryable<Recipe> Recipes { get; set; }
-        public IQueryable<Category> Categories { get; set; }
-        public IQueryable<DifficultyLevel> DiffLevels { get; set; }
+        public List<Recipe> Recipes { get; set; }
+        //public List<Category> Categories { get; set; }
+        //public List<DifficultyLevel> DiffLevels { get; set; }
         public Category Category { get; set; }
+        public int CategoryID { get; set; }
         public Tag Tag { get; set; }
+
     }
 }
