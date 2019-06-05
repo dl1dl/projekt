@@ -39,24 +39,4 @@ else
     <h4>Brak opublikowanych komentarzy</h4>
 }
 
-<h3>Przepisy dodane do ulubionych:</h3>
-@if (@Model.FavoriteRecipes.Count() > 0)
-{
-    <ul>
-        @foreach (var recipe in Model.FavoriteRecipes)
-        {
-        <li>
-            <div>
-                <a style="display: inline" asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@recipe.FavoriteRecipeID"
-                   asp-route-userId="@Model.Id" class="btn btn-danger">usuń z ulubionych</a>
-                <p style="margin-left:10px; display: inline"><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Recipe.RecipeID">@recipe.Recipe.Name</a></p>
-
-            </div>
-        </li>
-        }
-    </ul>
-}
-else
-{
-    <h4>Brak ulubionych przepisów</h4>
-}
+@await Component.InvokeAsync("FavRecipesInProfile", Model.Id)

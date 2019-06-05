@@ -1,0 +1,19 @@
+﻿@model List<FavoriteRecipe>
+
+<h3>Przepisy dodane do ulubionych:</h3>
+@if (@Model.Count() > 0)
+{
+    <ul>
+        @foreach (var recipe in Model)
+        {
+            <li>
+                <div>
+                    <a style="display: inline" asp-controller="Recipe" asp-action="RemoveFromFavorites" asp-route-id="@recipe.FavoriteRecipeID"
+                       asp-route-userId="@recipe.UserID" class="btn btn-danger">usuń z ulubionych</a>
+                    <p style="margin-left:10px; display: inline"><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Recipe.RecipeID">@recipe.Recipe.Name</a></p>
+
+                </div>
+            </li>
+        }
+    </ul>
+}
