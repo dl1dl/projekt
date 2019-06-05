@@ -19,11 +19,6 @@ namespace projekt.Controllers
             _context = ctx;
         }
 
-        /*public IActionResult Index()
-        {
-            return View();
-        }*/
-
         public async Task<IActionResult> Index(string id)
         {
             Tag tag = await _context.Tags
@@ -48,7 +43,6 @@ namespace projekt.Controllers
                 tagVM.TagName = id;
                 tagVM.Recipes = new List<Recipe>();
             } 
-
             return View(tagVM);
         }
     }
