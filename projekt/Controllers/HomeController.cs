@@ -44,7 +44,10 @@ namespace projekt.Controllers
 
             if (!String.IsNullOrWhiteSpace(searchString))
             {
-                var recipesFromContext = _context.Recipes.Include(i => i.Ingredients).Include(c => c.Category);
+                var recipesFromContext = _context.Recipes
+                    .Include(i => i.Ingredients)
+                    .Include(t => t.Taggings)
+                    .Include(c => c.Category);
                 //var recipesWithIngredient = _context.Ingredients.Include(r => r.Recipe);
                 List<Recipe> recipesToRemove = new List<Recipe>();
 
@@ -76,17 +79,19 @@ namespace projekt.Controllers
                     {
                         if (recipes.Count() == 0)
                         {
-                            recipes.AddRange(recipesFromContext.Where(x => x.Tags.Contains(tag)));
+                            //recipes.AddRange(recipesFromContext.Where(x => x.Tags.Contains(tag)));
+                            recipes.AddRange(recipesFromContext.Where(x => x.Taggings.Where(t => t.TagName == tag).Count() > 0));
                         }
                         else
                         {
-                            var recipesWithTag = recipesFromContext.Where(x => x.Tags.Contains(tag));
-                            
+                            //var recipesWithTag = recipesFromContext.Where(x => x.Tags.Contains(tag));
+                            var recipesWithTag = recipesFromContext
+                                .Where(x => x.Taggings.Where(t => t.TagName == tag).Count() > 0);
+
                             if (recipesWithTag.Count() > 0)
                             {
                                 List<Recipe> recipesAdded = new List<Recipe>();
                                 recipesAdded.AddRange(recipes);
-
                                 recipes = recipesAdded.Intersect(recipesWithTag).ToList();
                             }
                         }
@@ -96,8 +101,8 @@ namespace projekt.Controllers
                 {
                     recipes = recipesFromContext.ToList();
                 }
-                
-                foreach (var word in words)
+
+                /*foreach (var word in words)
                 {
                     if (recipesToRemove.Count() == 0)
                     {
@@ -117,8 +122,16 @@ namespace projekt.Controllers
                             recipesToRemove = newRecipesToRemove.Intersect(oldRecipesToRemove).ToList();
                         }
                     }
-                }
+                }*/
 
+                foreach (var word in words)
+                {
+                    if (!tagsToAdd.Contains(word))
+                    {
+                        recipesToRemove.AddRange(recipes.Where(x => !x.Name.Contains(word) && !x.Description.ToLower().Contains(word)
+                            && (x.Ingredients.Where(z => z.Name.ToLower().Contains(word)).Count() == 0)).ToList());
+                    }
+                }
                 if (recipesToRemove.Count() > 0)
                 {
                     foreach (var recipeToRemove in recipesToRemove)
@@ -129,7 +142,12 @@ namespace projekt.Controllers
 
                 foreach (var tag in tagsToRemove)
                 {
-                    recipes.RemoveAll(x => x.Tags.Contains(tag));
+                    //recipes.RemoveAll(x => x.Tags.Contains(tag));
+                    recipesToRemove = recipes.Where(x => x.Taggings.Where(t => t.TagName == tag).Count() > 0).ToList();
+                    foreach (Recipe recipe in recipesToRemove)
+                    {
+                        recipes.Remove(recipe);
+                    }
                 }
             }
             else

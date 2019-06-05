@@ -19,7 +19,7 @@
         <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a></p>
     }
 
-    <p>kategoria: <a asp-controller="Category" asp-action="AllRecipes" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
+    <p>kategoria: <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
     <p>stopień trudności: @Model.DifficultyLevel.Name</p>
     <p>Opis przepisu: <br />@Model.Description</p>
 </div>
