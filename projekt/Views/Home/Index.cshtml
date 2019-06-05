@@ -35,7 +35,7 @@ ViewBag.words
 id=@ViewBag.id
 
 <form asp-controller="Home" asp-action="Index" method="get" id="search-box" asp-route-id="@Model.CategoryID">
-    <h6>użyj #tag, by wyszukać przepisy z danym tagiem, -tag by przepisy z tym tagiem wykluczyć</h6>
+    <h6>użyj #tag, by wyszukać przepisy z danym tagiem, -tag, by przepisy z tym tagiem wykluczyć</h6>
     <p style="margin-top:5px">
         Szukaj przepisu: <input type="text" name="SearchString">
         <input class="btn" type="submit" />

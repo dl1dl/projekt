@@ -45,7 +45,7 @@ namespace projekt.Controllers
             if (!String.IsNullOrWhiteSpace(searchString))
             {
                 var recipesFromContext = _context.Recipes.Include(i => i.Ingredients).Include(c => c.Category);
-                var recipesWithIngredient = _context.Ingredients.Include(r => r.Recipe);
+                //var recipesWithIngredient = _context.Ingredients.Include(r => r.Recipe);
                 List<Recipe> recipesToRemove = new List<Recipe>();
 
                 searchString = Regex.Replace(searchString, " {2,}", " ");
@@ -74,7 +74,22 @@ namespace projekt.Controllers
                 {
                     foreach (var tag in tagsToAdd)
                     {
-                        recipes.AddRange(recipesFromContext.Where(x => x.Tags.Contains(tag)));
+                        if (recipes.Count() == 0)
+                        {
+                            recipes.AddRange(recipesFromContext.Where(x => x.Tags.Contains(tag)));
+                        }
+                        else
+                        {
+                            var recipesWithTag = recipesFromContext.Where(x => x.Tags.Contains(tag));
+                            
+                            if (recipesWithTag.Count() > 0)
+                            {
+                                List<Recipe> recipesAdded = new List<Recipe>();
+                                recipesAdded.AddRange(recipes);
+
+                                recipes = recipesAdded.Intersect(recipesWithTag).ToList();
+                            }
+                        }
                     }
                 }
                 else
@@ -124,7 +139,7 @@ namespace projekt.Controllers
             
             if (id != 0)
             {
-                List<Recipe> recipesInCategory = new List<Recipe>();
+                /*List<Recipe> recipesInCategory = new List<Recipe>();
                 foreach (var recipe in recipes)
                 {
                     if (recipe.Category == category)
@@ -132,7 +147,8 @@ namespace projekt.Controllers
                         recipesInCategory.Add(recipe);
                     }
                 }
-                recipes = recipesInCategory;
+                recipes = recipesInCategory;*/
+                recipes.RemoveAll(x => x.Category != category);
             }
 
             IndexVM IndexVM = new IndexVM
