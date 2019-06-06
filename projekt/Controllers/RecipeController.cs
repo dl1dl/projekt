@@ -20,6 +20,7 @@ namespace projekt.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<WebAppUser> _userManager;
         private readonly SignInManager<WebAppUser> _signInManager;
+        private RecipeDetailsVM recipeDetailsVM;
 
         public RecipeController(AppDbContext ctx, IRecipeRepository rec, UserManager<WebAppUser> umn, SignInManager<WebAppUser> sim)
         {
@@ -316,15 +317,23 @@ namespace projekt.Controllers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
 
-            ViewBag.isAuthor = false;
-            ViewBag.isInFavorites = false;
+            //ViewBag.isAuthor = false;
+            //ViewBag.isInFavorites = false;
+
+            RecipeDetailsVM recipeDetailsVM = new RecipeDetailsVM()
+            {
+                Recipe = recipe,
+                IsAuthor = false,
+                IsInFavorites = false
+            };
 
             if (_signInManager.IsSignedIn(HttpContext.User))
             {
                 WebAppUser user = await _userManager.GetUserAsync(HttpContext.User);
                 if (recipe.Author != null && recipe.Author.Id == user.Id)
                 {
-                    ViewBag.isAuthor = true;
+                    //ViewBag.isAuthor = true;
+                    recipeDetailsVM.IsAuthor = true;
                 }
                 else
                 {
@@ -336,14 +345,18 @@ namespace projekt.Controllers
 
                         if (!(favoriteRecipe == null))
                         {
-                            ViewBag.isInFavorites = true;
-                            ViewBag.favoriteRecipeID = favoriteRecipe.FavoriteRecipeID;
+                            //ViewBag.isInFavorites = true;
+                            recipeDetailsVM.IsInFavorites = true;
+
+                            //ViewBag.favoriteRecipeID = favoriteRecipe.FavoriteRecipeID;
+                            recipeDetailsVM.FavoriteRecipeID = favoriteRecipe.FavoriteRecipeID; ;
                         }
                     }
                 }
             }
 
-            return View(recipe);
+            //return View(recipe);
+            return View(recipeDetailsVM);
         }
 
         public async Task<IActionResult> AddToFavorites(int id)

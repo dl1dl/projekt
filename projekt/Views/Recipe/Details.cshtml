@@ -1,34 +1,34 @@
-﻿@model Recipe
+﻿@model RecipeDetailsVM
 
 @{
-    ViewData["Title"] = @Model.Name;
+    ViewData["Title"] = @Model.Recipe.Name;
 }
 
 <div class="col-md-9">
     <div>
-        <h2>@Model.Name</h2>
+        <h2>@Model.Recipe.Name</h2>
 
         @await Component.InvokeAsync("FavoriteRecipes",
-         new { recipeID = Model.RecipeID, favoriteRecipeID = ViewBag.favoriteRecipeID, isAuthor = ViewBag.isAuthor })
+         new { recipeID = Model.Recipe.RecipeID, favoriteRecipeID = Model.FavoriteRecipeID, isAuthor = Model.IsAuthor })
 
-        @if (Model.Author == null)
+        @if (Model.Recipe.Author == null)
         {
             <p>autor: <i>profil skasowany</i></p>
         }
         else
         {
-            <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Author.Id">@Model.Author.Email</a></p>
+            <p>autor: <a asp-controller="Account" asp-action="Details" asp-route-id="@Model.Recipe.Author.Id">@Model.Recipe.Author.Email</a></p>
         }
 
-        <p>kategoria: <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.Category.CategoryID">@Model.Category.Name</a></p>
-        <p>stopień trudności: @Model.DifficultyLevel.Name</p>
-        <p>Opis przepisu: <br />@Model.Description</p>
+        <p>kategoria: <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.Recipe.Category.CategoryID">@Model.Recipe.Category.Name</a></p>
+        <p>stopień trudności: @Model.Recipe.DifficultyLevel.Name</p>
+        <p>Opis przepisu: <br />@Model.Recipe.Description</p>
     </div>
 
     <div>
         <h4>Lista składników</h4>
         <ul>
-            @foreach (var ingredient in Model.Ingredients)
+            @foreach (var ingredient in Model.Recipe.Ingredients)
             {
                 <li>@ingredient.Name</li>
             }
@@ -38,7 +38,7 @@
     <div>
         <h4>Instrukcja wykonania</h4>
         <ol>
-            @foreach (var step in Model.Steps)
+            @foreach (var step in Model.Recipe.Steps)
             {
                 <li>@step.Description</li>
             }
@@ -47,17 +47,17 @@
 
     <div>
         tagi:
-        @foreach (var tag in Model.Taggings)
+        @foreach (var tag in Model.Recipe.Taggings)
         {
             <a asp-controller="Tag" asp-action="Index" class="btn btn-default" asp-route-id="@tag.TagName">@tag.TagName</a>
         }
     </div>
 
     <div>
-        @await Component.InvokeAsync("AddComment", new { recipeID = Model.RecipeID })
+        @await Component.InvokeAsync("AddComment", new { recipeID = Model.Recipe.RecipeID })
 
         <h3>Komentarze:</h3>
-        @foreach (var c in Model.Comments)
+        @foreach (var c in Model.Recipe.Comments)
         {
             @if (c.Author == null)
             {
@@ -74,6 +74,6 @@
 </div>
 
 <div class="col-md-3">
-    @{string imgpath = Model.RecipeID + ".jpg"; }
+    @{string imgpath = Model.Recipe.RecipeID + ".jpg"; }
     <img style="margin-top:5%;width:100%;height:100%;" alt="zdjęcie gotowego dania" src="~/images/recipes/@imgpath" asp-append-version="true">
 </div>
