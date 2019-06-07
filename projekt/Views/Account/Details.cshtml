@@ -6,37 +6,39 @@
 
 <h2>Profil użytkownika @Model.Email</h2>
 
-<h3>Dodane przepisy:</h3>
-@if (@Model.Recipes.Count() > 0)
-{
-    <ul>
-        @foreach (var recipe in Model.Recipes)
-        {
-            <li><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></li>
-        }
-    </ul>
-}
-else
-{
-    <h4>Brak dodanych przepisów</h4>
-}
+<div style="background:#f5f5f0;padding:1%;margin:1%;border-radius:25px;">
+    <h3>Dodane przepisy:</h3>
+    @if (@Model.Recipes.Count() > 0)
+    {
+        <ul>
+            @foreach (var recipe in Model.Recipes)
+            {
+                <li><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h4>Brak dodanych przepisów</h4>
+    }
 
-<h3>Dodane komentarze:</h3>
-@if (@Model.Comments.Count() > 0)
-{
-    <ul>
-        @foreach (var comment in Model.Comments)
-        {
-            <li>
-                <p>"@comment.Body"</p>
-                <p>przepis: <a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.Recipe.RecipeID">@comment.Recipe.Name</a></p>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <h4>Brak opublikowanych komentarzy</h4>
-}
+    <h3>Dodane komentarze:</h3>
+    @if (@Model.Comments.Count() > 0)
+    {
+        <ul>
+            @foreach (var comment in Model.Comments)
+            {
+                <li>
+                    <p>"@comment.Body"</p>
+                    <p>przepis: <a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.Recipe.RecipeID">@comment.Recipe.Name</a></p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h4>Brak opublikowanych komentarzy</h4>
+    }
 
-@await Component.InvokeAsync("FavRecipesInProfile", Model.Id)
+    @await Component.InvokeAsync("FavRecipesInProfile", Model.Id)
+</div>

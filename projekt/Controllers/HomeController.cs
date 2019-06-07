@@ -172,6 +172,7 @@ namespace projekt.Controllers
             IndexVM IndexVM = new IndexVM
             {
                 Recipes = recipes.Distinct().ToList(),
+                Category = category,
                 CategoryID = id
             };
 

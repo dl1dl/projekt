@@ -22,10 +22,10 @@
 
         <p>kategoria: <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.Recipe.Category.CategoryID">@Model.Recipe.Category.Name</a></p>
         <p>stopień trudności: @Model.Recipe.DifficultyLevel.Name</p>
-        <p>Opis przepisu: <br />@Model.Recipe.Description</p>
+        <p style="background:#f5f5f0;padding:1%;margin:1%;border-radius:25px;">Opis przepisu: <br />@Model.Recipe.Description</p>
     </div>
 
-    <div>
+    <div style="background:#f5f5f0;padding:1%;margin:1%;border-radius:25px;">
         <h4>Lista składników</h4>
         <ul>
             @foreach (var ingredient in Model.Recipe.Ingredients)
@@ -35,7 +35,7 @@
         </ul>
     </div>
 
-    <div>
+    <div style="background:#f5f5f0;padding:1%;margin:1%;border-radius:25px;">
         <h4>Instrukcja wykonania</h4>
         <ol>
             @foreach (var step in Model.Recipe.Steps)
@@ -59,16 +59,18 @@
         <h3>Komentarze:</h3>
         @foreach (var c in Model.Recipe.Comments)
         {
-            @if (c.Author == null)
-            {
-                <h6><i>profil skasowany</i></h6>
-            }
-            else
-            {
-                <h6><a asp-controller="Account" asp-action="Details" asp-route-id="@c.Author.Id">@c.Author</a></h6>
-            }
+            <div style="background:#f5f5f0;padding:1%;margin:1%">
+                @if (c.Author == null)
+                {
+                    <h6><i>profil skasowany</i></h6>
+                }
+                else
+                {
+                    <h6><a asp-controller="Account" asp-action="Details" asp-route-id="@c.Author.Id">@c.Author</a></h6>
+                }
 
-            <p>@c.Body</p>
+                <p>@c.Body</p>
+            </div>
         }
     </div>
 </div>
