@@ -55,7 +55,7 @@ id=@ViewBag.id-->
 
 @foreach (var recipe in Model.Recipes)
 {
-    <div style="padding:1%;border-radius:25px;">
+    <div style="background:#f5f5f0;padding:1%;border-radius:25px;">
         <h2><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></h2>
         <p>@recipe.Description</p>
         <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID" class="btn btn-primary">Zobacz więcej</a>
