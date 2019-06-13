@@ -3,6 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: #f1f1ef;
 }
 
 /* Wrapping element */
@@ -34,4 +35,73 @@ body {
     .carousel-caption {
         display: none;
     }
+}
+
+.navbar {
+    background: #1A936F;
+}
+
+.navbar-cat {
+    color: #ffffff;
+}
+
+a {
+    color: #114B5F;
+}
+
+a:hover {
+    text-decoration: none;
+    color: orange;
+}
+
+.recipe-details-button {
+    background: #114B5F;
+    border-color: #114B5F;
+}
+
+.login-button {
+    background: #F1F1EF;
+    color: #114B5F;
+}
+
+.signup-button {
+    background: #114B5F;
+    color: white;
+}
+
+.signup-button:hover {
+    color: white;
+}
+
+.search-button {
+    background: #114B5F;
+    color: white;
+}
+
+.search-button:hover {
+    background: orange;
+    color: white;
+}
+
+.hello-text {
+    color: white;
+    float: left; 
+    max-width: 60%; 
+    white-space: nowrap; 
+    overflow: hidden;
+}
+
+.add-comment-button {
+    background: #1A936F;
+    color: white;
+}
+
+.add-recipe-button {
+    background: #114B5F;
+    color: white;
+}
+
+.add-recipe-button:hover {
+    background: orange;
+    color: white;
 }

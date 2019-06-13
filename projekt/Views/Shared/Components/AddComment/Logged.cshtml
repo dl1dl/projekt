@@ -1,13 +1,11 @@
 ﻿@model NewCommentVM
 
-<p>Dodaj komentarz: </p>
-
 <form asp-controller="Comment" asp-action="Add" method="post">
     <input asp-for="Author" type="hidden" value="@Model.Author" />
     <input asp-for="Recipe" type="hidden" value="@Model.Recipe" />
     <div class="form-group">
-        <label asp-for="Body">Treść komentarza:</label>
+        <label asp-for="Body">Treść komentarza:</label> <br/>
         <textarea asp-for="Body"></textarea>
     </div>
-    <button class="btn btn-primary" type="submit">Dodaj komentarz</button>
+    <button class="btn add-comment-button" type="submit">Dodaj komentarz</button>
 </form>

@@ -37,7 +37,7 @@ id=@ViewBag.id-->
     <h6>użyj #tag, by wyszukać przepisy z danym tagiem, -tag, by przepisy z tym tagiem wykluczyć</h6>
     <p style="margin-top:5px">
         Szukaj przepisu: <input type="text" name="SearchString">
-        <input class="btn btn-primary" type="submit" />
+        <input class="btn search-button" type="submit" />
     </p>
     <!--<a asp-controller="Home" asp-action="Search">Wyszukiwanie szczegółowe</a>-->
 </form>
@@ -45,7 +45,7 @@ id=@ViewBag.id-->
 <div>
     @if (ViewBag.IsLogged)
     {
-        <a asp-controller="Recipe" asp-action="Add" class="btn btn-success" style="margin-bottom:1%">Dodaj przepis</a>
+        <a asp-controller="Recipe" asp-action="Add" class="btn add-recipe-button" style="margin-bottom:1%">Dodaj przepis</a>
     }
     else
     {
@@ -55,10 +55,10 @@ id=@ViewBag.id-->
 
 @foreach (var recipe in Model.Recipes)
 {
-    <div style="background:#f5f5f0;padding:1%;border-radius:25px;">
+    <div style="padding:1%;border-radius:10px;">
         <h2><a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID">@recipe.Name</a></h2>
         <p>@recipe.Description</p>
-        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID" class="btn btn-primary">Zobacz więcej</a>
+        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.RecipeID" class="recipe-details-button btn btn-warning">Zobacz więcej</a>
     </div>
     <br />
 
